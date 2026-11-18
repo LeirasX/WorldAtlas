@@ -4,7 +4,7 @@ use std::{
     io::{ErrorKind, Read},
     path::{Path, PathBuf},
 };
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, WebviewWindow};
 use tauri_plugin_dialog::DialogExt;
 
 const FILES: [&str; 6] = [
@@ -73,9 +73,15 @@ pub async fn read_atlas_folder(app: AppHandle) -> Result<Option<Vec<DataFile>>, 
 }
 
 #[tauri::command]
-pub async fn select_atlas_folder(app: AppHandle) -> Result<Option<Vec<DataFile>>, String> {
+pub async fn select_atlas_folder(
+    app: AppHandle,
+    window: WebviewWindow,
+) -> Result<Option<Vec<DataFile>>, String> {
     tauri::async_runtime::spawn_blocking(move || {
-        let Some(folder) = app.dialog().file().blocking_pick_folder() else {
+        let Some(folder) = app.dialog().file()
+            .set_parent(&window)
+            .set_title("Choose the WorldAtlas data folder")
+            .blocking_pick_folder() else {
             return Ok(None);
         };
         let path = folder
