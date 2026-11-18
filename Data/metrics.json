@@ -1,14 +1,412 @@
 {
-  "area": {"label":"Area","category":"Geography","kind":"number","unit":"km²","sum":true,"description":"Land area from the supplied country table."},
-  "population": {"label":"Population","category":"Geography","kind":"number","sum":true,"description":"Population estimate for the indicated reference year where available."},
-  "density": {"label":"Density","category":"Geography","kind":"number","unit":"people/km²","description":"People per square kilometre."},
-  "net": {"label":"Net salary","category":"Economy","kind":"number","unit":"EUR/month","description":"Monthly net wage as reported or estimated in the source."},
-  "rent": {"label":"Rent","category":"Housing","kind":"number","unit":"EUR/month","description":"Estimated monthly rent. Location and dwelling definitions vary by source."},
-  "essentials": {"label":"Essentials","category":"Economy","kind":"number","unit":"EUR/month","description":"Modelled monthly essential expenses before rent."},
-  "left": {"label":"Money left","category":"Economy","kind":"number","unit":"EUR/month","diverging":true,"description":"Monthly balance after rent and essential expenses."},
-  "rent_burden": {"label":"Rent burden","category":"Housing","kind":"number","unit":"%","description":"Rent divided by net salary, calculated when both are available."},
-  "income_group": {"label":"Income group","category":"Economy","kind":"text","description":"Income grouping recorded in Natural Earth Admin 0."},
-  "language": {"label":"Languages","category":"Language","kind":"text","description":"Language codes and English proficiency as recorded in the source."},
-  "climate": {"label":"Climate","category":"Climate","kind":"text"},
-  "society": {"label":"Society","category":"Society","kind":"text"}
+  "area": {
+    "label": "Area",
+    "category": "Geography",
+    "kind": "number",
+    "unit": "km²",
+    "sum": true,
+    "description": "Land area from the supplied country table."
+  },
+  "population": {
+    "label": "Population",
+    "category": "Geography",
+    "kind": "number",
+    "sum": true,
+    "description": "Population estimate for the indicated reference year where available."
+  },
+  "density": {
+    "label": "Density",
+    "category": "Geography",
+    "kind": "number",
+    "unit": "people/km²",
+    "description": "People per square kilometre."
+  },
+  "net": {
+    "label": "Net salary · unverified",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "EUR/month",
+    "description": "Monthly net wage as reported or estimated in the source."
+  },
+  "rent": {
+    "label": "Rent · unverified",
+    "category": "Housing",
+    "kind": "number",
+    "unit": "EUR/month",
+    "description": "Estimated monthly rent. Location and dwelling definitions vary by source."
+  },
+  "essentials": {
+    "label": "Essentials · unverified",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "EUR/month",
+    "description": "Modelled monthly essential expenses before rent."
+  },
+  "left": {
+    "label": "Money left · unverified",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "EUR/month",
+    "diverging": true,
+    "description": "Monthly balance after rent and essential expenses."
+  },
+  "rent_burden": {
+    "label": "Rent burden · unverified",
+    "category": "Housing",
+    "kind": "number",
+    "unit": "%",
+    "description": "Rent divided by net salary, calculated when both are available."
+  },
+  "income_group": {
+    "label": "Income group",
+    "category": "Economy",
+    "kind": "text",
+    "description": "Natural Earth income grouping, except Australia corrected to World Bank FY2027 high income. Inspect each observation’s reference period."
+  },
+  "language": {
+    "label": "Languages",
+    "category": "Language",
+    "kind": "text",
+    "description": "Language codes and English proficiency as recorded in the source."
+  },
+  "climate": {
+    "label": "Climate",
+    "category": "Climate",
+    "kind": "text"
+  },
+  "society": {
+    "label": "Society",
+    "category": "Society",
+    "kind": "text"
+  },
+  "wb_land_area_km2": {
+    "label": "Land area (sq. km) · WDI",
+    "category": "Geography",
+    "kind": "number",
+    "unit": "km²",
+    "description": "Land area is a country's total area, excluding area under inland water bodies, national claims to continental shelf, and exclusive economic zones. In most cases the definition of inland water bodies includes major rivers and lakes.",
+    "sourceOrganization": "FAOSTAT, Food and Agriculture Organization of the United Nations (FAO), uri: https://www.fao.org/faostat/en/#data/RL, publisher: Food and Agriculture Organization of the United Nations (FAO)",
+    "indicator": "AG.LND.TOTL.K2",
+    "sourceUrl": "https://data.worldbank.org/indicator/AG.LND.TOTL.K2",
+    "diverging": false
+  },
+  "wb_population": {
+    "label": "Population, total · WDI",
+    "category": "Geography",
+    "kind": "number",
+    "unit": "people",
+    "description": "Total population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship. The values shown are midyear estimates.",
+    "sourceOrganization": "World Population Prospects, United Nations (UN), uri: https://population.un.org/wpp/, publisher: UN Population Division;\nStatistical databases and publications from national statistical offices, National Statistical Offices (NSOs), uri: https://unstats.un.org/home/nso_sites/, publisher: National Statistical Offices;\nEurostat: Demographic Statistics, Eurostat (ESTAT), uri: https://ec.europa.eu/eurostat/data/database?node_code=earn_ses_monthly, publisher: Eurostat;\nPopulation and Vital Statistics Report (various years), United Nations (UN), uri: https://unstats.un.org, publisher: UN Statistics Division",
+    "indicator": "SP.POP.TOTL",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "diverging": false
+  },
+  "wb_population_density_per_km2": {
+    "label": "Population density (people per sq. km of land area) · WDI",
+    "category": "Geography",
+    "kind": "number",
+    "unit": "people/km²",
+    "description": "Population density is midyear population divided by land area in square kilometers. Population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship--except for refugees not permanently settled in the country of asylum, who are generally considered part of the population of their country of origin. Land area is a country's total area, excluding area under inland water bodies, national claims to continental shelf, and exclusive economic zones. In most cases the definition of inland water bodies includes major rivers and lakes.",
+    "sourceOrganization": "FAO population estimates, Food and Agriculture Organization of the United Nations (FAO), publisher: Food and Agriculture Organization of the United Nations (FAO);\nWorld Bank population estimates, World Bank (WB), publisher: World Bank (WB)",
+    "indicator": "EN.POP.DNST",
+    "sourceUrl": "https://data.worldbank.org/indicator/EN.POP.DNST",
+    "diverging": false
+  },
+  "wb_urban_population_pct": {
+    "label": "Urban population (% of total population) · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "% of population",
+    "description": "Urban population refers to people living in urban areas as defined by national statistical offices. The data are collected and smoothed by United Nations Population Division.",
+    "sourceOrganization": "World Urbanization Prospects, United Nations (UN), uri: https://population.un.org/wup/, note: United Nations Population Division's World Urbanization Prospects, National definitions, publisher: UN Population Division",
+    "indicator": "SP.URB.TOTL.IN.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS",
+    "diverging": false
+  },
+  "wb_population_growth_pct": {
+    "label": "Population growth (annual %) · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "% per year",
+    "description": "Annual population growth rate for year t is the exponential rate of growth of midyear population from year t-1 to t, expressed as a percentage. Population is based on the de facto definition of population, which counts all residents regardless of legal status or citizenship.",
+    "sourceOrganization": "World Population Prospects, United Nations (UN), note: Derived from total population, publisher: UN Population Division;\nStatistical databases and publications from national statistical offices, National Statistical Offices (NSOs), note: Derived from total population;\nDemographic Statistics, Eurostat (ESTAT), note: Derived from total population;\nPopulation and Vital Statistics Report (various years), United Nations (UN), note: Derived from total population, publisher: UN Statistical Division",
+    "indicator": "SP.POP.GROW",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.POP.GROW",
+    "diverging": true
+  },
+  "wb_fertility_births_per_woman": {
+    "label": "Fertility rate, total (births per woman) · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "births per woman",
+    "description": "Total fertility rate represents the number of children that would be born to a woman if she were to live to the end of her childbearing years and bear children in accordance with age-specific fertility rates of the specified year.",
+    "sourceOrganization": "World Population Prospects, United Nations (UN), publisher: UN Population Division;\nStatistical databases and publications from national statistical offices, National Statistical Offices (NSOs);\nDemographic Statistics, Eurostat (ESTAT)",
+    "indicator": "SP.DYN.TFRT.IN",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.DYN.TFRT.IN",
+    "diverging": false
+  },
+  "wb_life_expectancy_years": {
+    "label": "Life expectancy at birth, total (years) · WDI",
+    "category": "Health",
+    "kind": "number",
+    "unit": "years",
+    "description": "Life expectancy at birth indicates the number of years a newborn infant would live if prevailing patterns of mortality at the time of its birth were to stay the same throughout its life.",
+    "sourceOrganization": "World Population Prospects, United Nations (UN), uri: UN Population Division;\nStatistical databases and publications from national statistical offices, National Statistical Offices (NSOs), note: Derived from male and female life expectancy at birth from sources such as statistical databases and publications from national statistical offices.;\nDemographic Statistics, Eurostat (ESTAT), note: Derived from male and female life expectancy at birth from sources such as Eurostat: Demographic Statistics.",
+    "indicator": "SP.DYN.LE00.IN",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
+    "diverging": false
+  },
+  "wb_net_migration": {
+    "label": "Net migration · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "people",
+    "description": "Net migration is the net total of migrants during the period, that is, the number of immigrants minus the number of emigrants, including both citizens and noncitizens.",
+    "sourceOrganization": "World Population Prospects, United Nations (UN), publisher: UN Population Division",
+    "indicator": "SM.POP.NETM",
+    "sourceUrl": "https://data.worldbank.org/indicator/SM.POP.NETM",
+    "diverging": true
+  },
+  "wb_gdp_usd": {
+    "label": "GDP (current US$) · WDI",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "current USD",
+    "description": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. This indicator is expressed in current prices, meaning no adjustment has been made to account for price changes over time. This indicator is expressed in United States dollars.",
+    "sourceOrganization": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)",
+    "indicator": "NY.GDP.MKTP.CD",
+    "sourceUrl": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "diverging": false
+  },
+  "wb_gdp_per_capita_usd": {
+    "label": "GDP per capita (current US$) · WDI",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "current USD/person",
+    "description": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. The core indicator has been divided by the general population to achieve a per capita estimate.This indicator is expressed in current prices, meaning no adjustment has been made to account for price changes over time. This indicator is expressed in United States dollars.",
+    "sourceOrganization": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)",
+    "indicator": "NY.GDP.PCAP.CD",
+    "sourceUrl": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD",
+    "diverging": false
+  },
+  "wb_gdp_per_capita_ppp": {
+    "label": "GDP per capita, PPP (current international $) · WDI",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "current international dollars/person",
+    "description": "This indicator provides values for gross domestic product (GDP) per person expressed in current international dollars, converted by purchasing power parities (PPPs). PPPs account for the different price levels across countries and thus PPP-based comparisons of economic output are more appropriate for comparing the output of economies and the average material well-being of their inhabitants than exchange-rate based comparisons.  \n\nGross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. This series has been linked to produce a consistent time series to counteract breaks in series over time due to changes in base years, source data and methodologies. Thus, it may not be comparable with other national accounts series in the database for historical years. The core indicator has been divided by the general population to achieve a per capita estimate. This indicator is expressed in current prices, meaning no adjustment has been made to account for price changes over time. The PPP conversion factor is a currency conversion factor and a spatial price deflator. PPPs convert different currencies to a common currency and, in the process of conversion, equalize their purchasing power by eliminating the differences in price levels between countries, thereby allowing volume or output comparisons of GDP and its expenditure components.",
+    "sourceOrganization": "International Comparison Program (ICP), World Bank (WB), uri: https://www.worldbank.org/en/programs/icp/data, note: This information is for ICP’s PPPs utilized in WDI, publisher: International Comparison Program (ICP), date accessed: May 30, 2024, date published: May 30, 2024;\nThe Eurostat PPP Programme, Eurostat (ESTAT), uri: https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes, publisher: Eurostat;\nThe OECD PPP Programme, Organisation for Economic Co-operation and Development (OECD), uri: https://data-explorer.oecd.org/, publisher: OECD;\nStaff estimates, World Bank (WB);\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nWorld Economic Outlook database, International Monetary Fund (IMF)",
+    "indicator": "NY.GDP.PCAP.PP.CD",
+    "sourceUrl": "https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.CD",
+    "diverging": false
+  },
+  "wb_gdp_growth_pct": {
+    "label": "GDP growth (annual %) · WDI",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "% per year",
+    "description": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. This indicator denotes the percentage change over each previous year of the constant price (base year 2015) series in United States dollars.",
+    "sourceOrganization": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)",
+    "indicator": "NY.GDP.MKTP.KD.ZG",
+    "sourceUrl": "https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG",
+    "diverging": true
+  },
+  "wb_inflation_cpi_pct": {
+    "label": "Inflation, consumer prices (annual %) · WDI",
+    "category": "Economy",
+    "kind": "number",
+    "unit": "% per year",
+    "description": "Inflation as measured by the consumer price index reflects the annual percentage change in the cost to the average consumer of acquiring a basket of goods and services that may be fixed or changed at specified intervals, such as yearly.",
+    "sourceOrganization": "International Financial Statistics database, International Monetary Fund (IMF)",
+    "indicator": "FP.CPI.TOTL.ZG",
+    "sourceUrl": "https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG",
+    "diverging": true
+  },
+  "wb_unemployment_pct": {
+    "label": "Unemployment, total (% of total labor force) (modeled ILO estimate) · WDI",
+    "category": "Work",
+    "kind": "number",
+    "unit": "% of labor force",
+    "description": "Unemployment refers to the share of the labor force that is without work but available for and seeking employment.",
+    "sourceOrganization": "ILO Modelled Estimates database (ILOEST), International Labour Organization (ILO), uri: https://ilostat.ilo.org/data/bulk/, publisher: ILOSTAT, type: external database, date accessed: January 17, 2026",
+    "indicator": "SL.UEM.TOTL.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "diverging": false
+  },
+  "wb_gini_index": {
+    "label": "Gini index · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "index 0–100",
+    "description": "Gini index measures the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution. A Lorenz curve plots the cumulative percentages of total income received against the cumulative number of recipients, starting with the poorest individual or household. The Gini index measures the area between the Lorenz curve and a hypothetical line of absolute equality, expressed as a percentage of the maximum area under the line. Thus a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality.",
+    "sourceOrganization": "World Bank, Poverty and Inequality Platform. Data are based on primary household survey data obtained from government statistical agencies and World Bank country departments. Data for high-income economies are mostly from the Luxembourg Income Study database. For more information and methodology, please see http://pip.worldbank.org., World Bank (WB), uri: http://pip.worldbank.org, note: Data are based on primary household survey data obtained from government statistical agencies and World Bank country departments. Data for high-income economies are mostly from the Luxembourg Income Study database.",
+    "indicator": "SI.POV.GINI",
+    "sourceUrl": "https://data.worldbank.org/indicator/SI.POV.GINI",
+    "diverging": false
+  },
+  "wb_employment_population_pct": {
+    "label": "Employment to population ratio, 15+, total (%) (modeled ILO estimate) · WDI",
+    "category": "Work",
+    "kind": "number",
+    "unit": "% population age 15+",
+    "description": "Employment to population ratio is the proportion of a country's population that is employed.",
+    "sourceOrganization": "ILO Modelled Estimates database (ILOEST), International Labour Organization (ILO), uri: https://ilostat.ilo.org/data/bulk/, publisher: ILOSTAT, type: external database, date accessed: January 17, 2026",
+    "indicator": "SL.EMP.TOTL.SP.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SL.EMP.TOTL.SP.ZS",
+    "diverging": false
+  },
+  "wb_forest_area_pct": {
+    "label": "Forest area (% of land area) · WDI",
+    "category": "Nature",
+    "kind": "number",
+    "unit": "% of land area",
+    "description": "Forest area (% of land area) is the share of total land area that is under natural or planted stands of trees of at least 5 meters in situ, whether productive or not, and excludes tree stands in agricultural production systems (for example, in fruit plantations and agroforestry systems) and trees in urban parks and gardens.",
+    "sourceOrganization": "FAOSTAT, Food and Agriculture Organization of the United Nations (FAO), uri: https://www.fao.org/faostat/en/#data/RL, publisher: Food and Agriculture Organization of the United Nations (FAO)",
+    "indicator": "AG.LND.FRST.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/AG.LND.FRST.ZS",
+    "diverging": false
+  },
+  "wb_pm25_ug_m3": {
+    "label": "PM2.5 air pollution, mean annual exposure (micrograms per cubic meter) · WDI",
+    "category": "Nature",
+    "kind": "number",
+    "unit": "µg/m³",
+    "description": "Population-weighted exposure to ambient PM2.5 pollution is defined as the average level of exposure of a nation's population to concentrations of suspended particles measuring less than 2.5 microns in aerodynamic diameter, which are capable of penetrating deep into the respiratory tract and causing severe health damage. Exposure is calculated by weighting mean annual concentrations of PM2.5 by population in both urban and rural areas.",
+    "sourceOrganization": "Global Burden of Disease Study 2023 (GBD 2023) Air Pollution Exposure Estimates and Risk Curves 1990-2023, GBD Collaborator Network, uri: https://ghdx.healthdata.org/record/ihme-data/gbd-2023-air-pollution-exposure-estimates-1990-2023, note: Need to create account to retrieve data., publisher: Institute for Health Metrics and Evaluation (IHME), date accessed: 2026-04-03, date published: 2026-01-23",
+    "indicator": "EN.ATM.PM25.MC.M3",
+    "sourceUrl": "https://data.worldbank.org/indicator/EN.ATM.PM25.MC.M3",
+    "diverging": false
+  },
+  "wb_infant_mortality_per_1000": {
+    "label": "Mortality rate, infant (per 1,000 live births) · WDI",
+    "category": "Health",
+    "kind": "number",
+    "unit": "deaths/1,000 live births",
+    "description": "Infant mortality rate is the number of infants dying before reaching one year of age, per 1,000 live births in a given year.",
+    "sourceOrganization": "UN Inter-agency Group for Child Mortality Estimation, UN Children's Fund (UNICEF), uri: www.childmortality.org;\nWorld Health Organization (WHO), uri: www.childmortality.org, note: UN Inter-agency Group for Child Mortality Estimation;\nWorld Bank (WB), uri: www.childmortality.org, note: UN Inter-agency Group for Child Mortality Estimation;\nUnited Nations (UN), uri: www.childmortality.org, note: UN Inter-agency Group for Child Mortality Estimation, publisher: UN Population Division",
+    "indicator": "SP.DYN.IMRT.IN",
+    "sourceUrl": "https://data.worldbank.org/indicator/SP.DYN.IMRT.IN",
+    "diverging": false
+  },
+  "wb_health_expenditure_pct_gdp": {
+    "label": "Current health expenditure (% of GDP) · WDI",
+    "category": "Health",
+    "kind": "number",
+    "unit": "% of GDP",
+    "description": "Level of current health expenditure expressed as a percentage of GDP.  Estimates of current health expenditures include healthcare goods and services consumed during each year. This indicator does not include capital health expenditures such as buildings, machinery, IT and stocks of vaccines for emergency or outbreaks.",
+    "sourceOrganization": "Global Health Expenditure Database, updated December 12th, 2025, World Health Organization (WHO), uri: https://apps.who.int/nha/database",
+    "indicator": "SH.XPD.CHEX.GD.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SH.XPD.CHEX.GD.ZS",
+    "diverging": false
+  },
+  "wb_physicians_per_1000": {
+    "label": "Physicians (per 1,000 people) · WDI",
+    "category": "Health",
+    "kind": "number",
+    "unit": "per 1,000 people",
+    "description": "Physicians include generalist and specialist medical practitioners.",
+    "sourceOrganization": "Global Health Workforce Statistics, World Health Organization (WHO);\nOrganisation for Economic Co-operation and Development (OECD);\nCountry data",
+    "indicator": "SH.MED.PHYS.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SH.MED.PHYS.ZS",
+    "diverging": false
+  },
+  "wb_homicides_per_100000": {
+    "label": "Intentional homicides (per 100,000 people) · WDI",
+    "category": "Society",
+    "kind": "number",
+    "unit": "per 100,000 people",
+    "description": "An intentional homicide is defined as an unlawful death inflicted upon a person with the intent to cause death or serious injury.",
+    "sourceOrganization": "UNODC Research - Data Portal – Intentional Homicide, UN Office on Drugs and Crime (UNODC)",
+    "indicator": "VC.IHR.PSRC.P5",
+    "sourceUrl": "https://data.worldbank.org/indicator/VC.IHR.PSRC.P5",
+    "diverging": false
+  },
+  "wb_road_deaths_per_100000": {
+    "label": "Mortality caused by road traffic injury (per 100,000 population) · WDI",
+    "category": "Travel",
+    "kind": "number",
+    "unit": "per 100,000 people",
+    "description": "Mortality caused by road traffic injury is estimated road traffic fatal injury deaths per 100,000 population.",
+    "sourceOrganization": "World Health Organization, Global Health Observatory Data Repository (http://apps.who.int/ghodata/)., World Health Organization (WHO), uri: https://www.who.int/data/gho",
+    "indicator": "SH.STA.TRAF.P5",
+    "sourceUrl": "https://data.worldbank.org/indicator/SH.STA.TRAF.P5",
+    "diverging": false
+  },
+  "wb_literacy_adult_pct": {
+    "label": "Literacy rate, adult total (% of people ages 15 and above) · WDI",
+    "category": "Education",
+    "kind": "number",
+    "unit": "% age 15+",
+    "description": "Adult literacy rate is the percentage of people ages 15 and above who can both read and write with understanding a short simple statement about their everyday life.",
+    "sourceOrganization": "Data API, UN Educational, Scientific and Cultural Organization (UNESCO), uri: https://databrowser.uis.unesco.org/resources, note: The data are obtained through the UIS API.  Detailed documentation is available at: https://api.uis.unesco.org/api/public/documentation/, publisher: UNESCO Institute for Statistics (UIS), type: Excel (bulk file), date accessed: 2026-03-19, date published: 2026-02",
+    "indicator": "SE.ADT.LITR.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS",
+    "diverging": false
+  },
+  "wb_tertiary_enrollment_gross_pct": {
+    "label": "School enrollment, tertiary (% gross) · WDI",
+    "category": "Education",
+    "kind": "number",
+    "unit": "% gross enrollment ratio",
+    "description": "Gross enrollment ratio is the ratio of total enrollment, regardless of age, to the population of the age group that officially corresponds to the level of education shown. Tertiary education, whether or not to an advanced research qualification, normally requires, as a minimum condition of admission, the successful completion of education at the secondary level.",
+    "sourceOrganization": "Data API, UN Educational, Scientific and Cultural Organization (UNESCO), uri: https://databrowser.uis.unesco.org/resources, note: The data are obtained through the UIS API.  Detailed documentation is available at: https://api.uis.unesco.org/api/public/documentation/, publisher: UNESCO Institute for Statistics (UIS), type: Bulk file (csv), date accessed: 2026-03-19, date published: 2026-02",
+    "indicator": "SE.TER.ENRR",
+    "sourceUrl": "https://data.worldbank.org/indicator/SE.TER.ENRR",
+    "diverging": false
+  },
+  "wb_internet_users_pct": {
+    "label": "Individuals using the Internet (% of population) · WDI",
+    "category": "Other",
+    "kind": "number",
+    "unit": "% of population",
+    "description": "Internet users are individuals who have used the Internet (from any location) in the last 3 months. The Internet can be used via a computer, mobile phone, personal digital assistant, games machine, digital TV etc.",
+    "sourceOrganization": "World Telecommunication/ICT Indicators Database, International Telecommunication Union (ITU), uri: https://datahub.itu.int/",
+    "indicator": "IT.NET.USER.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/IT.NET.USER.ZS",
+    "diverging": false
+  },
+  "wb_fixed_broadband_per_100": {
+    "label": "Fixed broadband subscriptions (per 100 people) · WDI",
+    "category": "Other",
+    "kind": "number",
+    "unit": "subscriptions/100 people",
+    "description": "Fixed broadband subscriptions refers to fixed subscriptions to high-speed access to the public Internet (a TCP/IP connection), at downstream speeds equal to, or greater than, 256 kbit/s. This includes cable modem, DSL, fiber-to-the-home/building, other fixed (wired)-broadband subscriptions, satellite broadband and terrestrial fixed wireless broadband. This total is measured irrespective of the method of payment. It excludes subscriptions that have access to data communications (including the Internet) via mobile-cellular networks. It should include fixed WiMAX and any other fixed wireless technologies. It includes both residential subscriptions and subscriptions for organizations.",
+    "sourceOrganization": "World Telecommunication/ICT Indicators Database, International Telecommunication Union (ITU)",
+    "indicator": "IT.NET.BBND.P2",
+    "sourceUrl": "https://data.worldbank.org/indicator/IT.NET.BBND.P2",
+    "diverging": false
+  },
+  "wb_mobile_subscriptions_per_100": {
+    "label": "Mobile cellular subscriptions (per 100 people) · WDI",
+    "category": "Other",
+    "kind": "number",
+    "unit": "subscriptions/100 people",
+    "description": "Mobile cellular telephone subscriptions are subscriptions to a public mobile telephone service that provide access to the PSTN using cellular technology. The indicator includes (and is split into) the number of postpaid subscriptions, and the number of active prepaid accounts (i.e. that have been used during the last three months). The indicator applies to all mobile cellular subscriptions that offer voice communications. It excludes subscriptions via data cards or USB modems, subscriptions to public mobile data services, private trunked mobile radio, telepoint, radio paging and telemetry services.",
+    "sourceOrganization": "World Telecommunication/ICT Indicators Database, International Telecommunication Union (ITU)",
+    "indicator": "IT.CEL.SETS.P2",
+    "sourceUrl": "https://data.worldbank.org/indicator/IT.CEL.SETS.P2",
+    "diverging": false
+  },
+  "wb_electricity_access_pct": {
+    "label": "Access to electricity (% of population) · WDI",
+    "category": "Other",
+    "kind": "number",
+    "unit": "% of population",
+    "description": "Access to electricity is the percentage of population with access to electricity. Electrification data are collected from industry, national surveys and international sources.",
+    "sourceOrganization": "SDG 7.1.1 Electrification Dataset, World Bank (WB), uri: https://trackingsdg7.esmap.org/downloads, note: Data is downloaded from ESMAP website. Data is released when a new Tracking SDG7 report is released., publisher: World Bank (WB), date accessed: 2024-05-16, date published: 2023",
+    "indicator": "EG.ELC.ACCS.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/EG.ELC.ACCS.ZS",
+    "diverging": false
+  },
+  "wb_research_development_pct_gdp": {
+    "label": "Research and development expenditure (% of GDP) · WDI",
+    "category": "Education",
+    "kind": "number",
+    "unit": "% of GDP",
+    "description": "Gross domestic expenditures on research and development (R&D), expressed as a percent of GDP. They include both capital and current expenditures in the four main sectors: Business enterprise, Government, Higher education and Private non-profit. R&D covers basic research, applied research, and experimental development.",
+    "sourceOrganization": "Stat Bulk Data Download Service, UN Educational, Scientific and Cultural Organization (UNESCO), uri: https://databrowser.uis.unesco.org/resources/bulk, publisher: UNESCO Institute for Statistics (UIS), date accessed: 2025-03-26, date published: 2025-02",
+    "indicator": "GB.XPD.RSDV.GD.ZS",
+    "sourceUrl": "https://data.worldbank.org/indicator/GB.XPD.RSDV.GD.ZS",
+    "diverging": false
+  }
 }

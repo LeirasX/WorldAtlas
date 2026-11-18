@@ -12,7 +12,7 @@
     "tauri": "tauri",
     "build:native": "tsc --noEmit && vite build --mode native",
     "test:browser": "npm run build:web && playwright test",
-    "build:local": "tsc --noEmit && vite build --mode local"
+    "build:local": "tsc --noEmit && vite build --mode private"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.5",

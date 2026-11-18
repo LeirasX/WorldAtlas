@@ -4,11 +4,13 @@ export const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South A
 export type Continent = typeof continents[number]
 export type Metric = {
   label: string; category: string; kind: 'number' | 'text'; unit?: string; description?: string
+  sourceOrganization?: string; indicator?: string; sourceUrl?: string;
   sum?: boolean; weighted?: boolean; diverging?: boolean; needsReview?: boolean
 }
 export type Metrics = Record<string, Metric>
 export type Observation = {
   value: number | string; raw?: string; estimated?: boolean; calculated?: boolean
+  verification?: string; estimateStatus?: string; unit?: string; definition?: string; sourceName?: string;
   year?: string; source?: string; basis?: string; confidence?: string; notes?: string; sourceValue?: string
 }
 export type Country = {
@@ -34,7 +36,7 @@ export function derive(values: Country['values']): Country['values'] {
   const result = { ...values }
   const add = (id: string, inputs: string[], calculate: (...numbers: number[]) => number) => {
     const observations = inputs.map(input => values[input])
-    if (result[id] || !observations.every(item => typeof item?.value === 'number')) return
+    if (result[id] || observations.some(item => item?.verification?.startsWith('unverified')) || !observations.every(item => typeof item?.value === 'number')) return
     const value = calculate(...observations.map(item => Number(item.value)))
     if (Number.isFinite(value)) {
       result[id] = { value, calculated: true, estimated: observations.some(item => item.estimated) }
@@ -47,7 +49,7 @@ export function derive(values: Country['values']): Country['values'] {
 }
 
 const identity = new Set(['id', 'alpha2', 'country', 'flag', 'continent', 'aliases'])
-const metadata = ['source', 'year', 'basis', 'confidence', 'notes', 'sourceValue'] as const
+const metadata = ['source', 'year', 'basis', 'confidence', 'notes', 'sourceValue', 'verification', 'estimateStatus', 'unit', 'definition', 'sourceName'] as const
 const missing = /^(?:|—|–|-|n\/?a|null)$/i
 const reserved = new Set(['__proto__', 'prototype', 'constructor'])
 
@@ -102,6 +104,7 @@ export function loadDataset(files: DataFile[], registry: Metrics, complete = fal
         const value = row[`${field}__${attribute}`]?.trim()
         if (value) observation[attribute] = value
       }
+      if (observation.estimateStatus?.startsWith('unknown') && !observation.estimated) delete observation.estimated
       values[field] = observation
     }
     let research: Country['research']
@@ -200,7 +203,7 @@ export function format(observation?: Observation, metric?: Metric, full = false)
   if (!observation) return '—'
   if (typeof observation.value === 'string') return observation.value
   const amount = (full || Math.abs(observation.value) < 10000 ? exact : compact).format(observation.value)
-  const value = metric?.unit === 'EUR/month' ? `€${amount}` : metric?.unit === '%' ? `${amount}%` : amount
+  const value = metric?.unit === 'EUR/month' ? `€${amount}` : metric?.unit?.startsWith('%') ? `${amount}%` : amount
   return observation.estimated ? `≈${value}` : value
 }
 

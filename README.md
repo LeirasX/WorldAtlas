@@ -80,3 +80,9 @@ After explicit publication approval, push this repository to the chosen GitHub r
 Made with [Natural Earth](https://www.naturalearthdata.com/downloads/50m-cultural-vectors/), using the public-domain 1:50m Admin 0 country features, version 5.1.2. Map boundaries follow Natural Earth’s de facto convention. Some territories appear for geographical context outside the 195-country registry. Small countries have point markers. Country profiles can be searched independently of boundary visibility.
 
 Public population and income-group values come from the corresponding Natural Earth attributes and can have different reference years. Financial, language, climate, and society observations from the supplied research remain in the local edition. The public snapshot can be extended with data cleared for redistribution.
+
+## First research release
+
+The first partial research release is preserved in the ignored `Context/Research/` folder, with the integration report and pre-integration snapshots. Run `python3 scripts/integrate-research.py` to validate and reapply it after regenerating the original local data. The importer refuses to overwrite edited WDI values.
+
+The 30 source-attributed WDI indicators use independent `wb_` keys in the local CSVs to retain distinct definitions and reference periods. Their estimate status is unknown and confidence was not individually assessed. Original financial estimates carry an explicit unverified label, and automatic financial calculations are skipped for those observations. The public dataset retains its separate scope, with Australia's income classification corrected using the World Bank FY2027 table.

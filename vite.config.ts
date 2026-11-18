@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const offline = mode !== 'native' && process.env.WORLDATLAS_OFFLINE !== '0'
   return {
     build: {
-      outDir: mode === 'native' ? 'dist-native' : mode === 'local' ? 'dist-local' : 'dist',
+      outDir: mode === 'native' ? 'dist-native' : mode === 'private' ? 'dist-local' : 'dist',
       rollupOptions: { output: { manualChunks: id => /\/Data\/(local|public)\/[^/]+\.csv/.test(id) ? 'country-data' : undefined } },
     },
     base: mode === 'pages' ? process.env.WORLDATLAS_BASE ?? '/WorldAtlas/' : './',

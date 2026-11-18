@@ -125,14 +125,17 @@ export function ObservationDetail({ country, id, metric }: { country: Country; i
   const item = country.values[id]
   if (!item) return <p>No observation is available.</p>
   const details = [
-    ['Unit', metric.unit], ['Reference period', item.year], ['Confidence', item.confidence],
+    ['Unit', item.unit ?? metric.unit], ['Verification', item.verification],
+    ['Estimate status', item.estimateStatus], ['Source series', item.sourceName],
+    ['Indicator', metric.indicator], ['Source organization', metric.sourceOrganization],
+    ['Reference period', item.year], ['Confidence', item.confidence],
     ['Status', [item.calculated && 'Calculated', item.estimated && 'Estimated'].filter(Boolean).join(' · ') || 'Imported'],
     ['Original value', item.raw], ['Source record value', item.sourceValue && item.sourceValue !== item.raw ? item.sourceValue : undefined],
     ['Method', item.basis], ['Notes', item.notes],
   ]
   const url = item.source && safeUrl(item.source)
   return <><div className="detail-value">{format(item, metric, true)}</div>
-    {metric.description && <p>{metric.description}</p>}
+    {(item.definition ?? metric.description) && <p>{item.definition ?? metric.description}</p>}
     {metric.needsReview && <p>Review this column’s definition and unit in the metric registry.</p>}
     <dl className="details">{details.filter(([, value]) => value).map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}
       {item.source && <div><dt>Source</dt><dd>{url ? <a href={url} target="_blank" rel="noreferrer">Open source ↗</a> : item.source}</dd></div>}

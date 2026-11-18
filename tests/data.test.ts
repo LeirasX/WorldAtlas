@@ -53,3 +53,53 @@ test('private snapshot preserves the supplied data when it is available', { skip
 function readFileIfPresent(path: string) {
   try { return readFileSync(path, 'utf8') } catch { return '' }
 }
+
+test('observation verification and unknown estimate status survive loading', () => {
+  const { countries } = loadDataset([{ name: 'status.csv', text: 'id,country,continent,net,net__verification,wb_population,wb_population__estimateStatus,wb_population__verification\nPRT,Portugal,Europe,900,unverified original estimate,12,unknown; includes models,source-attributed statistical series' }], registry)
+  assert.equal(countries[0].values.net.verification, 'unverified original estimate')
+  assert.equal(countries[0].values.wb_population.estimated, undefined)
+  assert.equal(countries[0].values.wb_population.estimateStatus, 'unknown; includes models')
+})
+
+test('Australia public income classification retains correction provenance', () => {
+  const { countries } = loadDataset(files, registry, true)
+  const item = countries.find(country => country.id === 'AUS')!.values.income_group
+  assert.equal(item.value, 'High income')
+  assert.equal(item.year, 'FY2027')
+  assert.equal(item.sourceValue, 'Low income')
+  assert.match(item.source!, /worldbank.org/)
+})
+
+test('release observations remain local and provenance-complete', { skip: !readFileIfPresent('Context/Research/release-2026/audit.json') }, () => {
+  const localFiles = readdirSync('Data/local').map(name => ({ name, text: readFileSync('Data/local/' + name, 'utf8') }))
+  const { countries } = loadDataset(localFiles, registry, true)
+  const observations = countries.flatMap(country => Object.entries(country.values).filter(([id]) => id.startsWith('wb_')))
+  assert.equal(observations.length, 5619)
+  assert.equal(countries.filter(country => Object.keys(country.values).some(id => id.startsWith('wb_'))).length, 194)
+  for (const [id, item] of observations) {
+    assert.ok(registry[id].description)
+    assert.equal(item.unit, registry[id].unit)
+    assert.equal(item.definition, registry[id].description)
+    assert.match(item.source!, /^https:\/\/data.worldbank.org\/indicator\//)
+    assert.ok(item.year && Number(item.year) >= 2000 && Number(item.year) <= 2025)
+    assert.match(item.estimateStatus!, /unknown/)
+    assert.equal(item.confidence, 'not individually assessed')
+  }
+  const before = readdirSync('Context/Research/before-integration')
+    .filter(name => name.endsWith('.csv') && !name.startsWith('public-'))
+    .map(name => ({ name, text: readFileSync('Context/Research/before-integration/' + name, 'utf8') }))
+  const original = loadDataset(before, registry, true)
+  for (const country of countries) {
+    const old = original.countries.find(item => item.id === country.id)!
+    for (const [key, value] of Object.entries(old.values)) {
+      if (value.calculated) continue
+      assert.equal(country.values[key].value, value.value, country.id + ' ' + key)
+    }
+    if (country.values.net) {
+      assert.match(country.values.net.verification!, /unverified/)
+      assert.equal(country.values.rent_burden, undefined)
+    }
+  }
+  const { countries: publicCountries } = loadDataset(files, registry, true)
+  assert.ok(publicCountries.every(country => !Object.keys(country.values).some(id => id.startsWith('wb_'))))
+})
