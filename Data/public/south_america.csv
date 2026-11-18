@@ -1,0 +1,13 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+ARG,AR,Argentina,🇦🇷,South America,,~44938712,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BOL,BO,Bolivia,🇧🇴,South America,,~11513100,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+BRA,BR,Brazil,🇧🇷,South America,,~211049527,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+CHL,CL,Chile,🇨🇱,South America,,~18952038,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+COL,CO,Colombia,🇨🇴,South America,,~50339443,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+ECU,EC,Ecuador,🇪🇨,South America,,~17373662,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+GUY,GY,Guyana,🇬🇾,South America,,~782766,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+PRY,PY,Paraguay,🇵🇾,South America,,~7044636,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+PER,PE,Peru,🇵🇪,South America,,~32510453,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SUR,SR,Suriname,🇸🇷,South America,,~581363,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+URY,UY,Uruguay,🇺🇾,South America,,~3461734,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+VEN,VE,Venezuela,🇻🇪,South America,,~28515829,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "WorldAtlas",
+  "version": "0.1.0",
+  "identifier": "org.worldatlas.explorer",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build:native",
+    "devUrl": "http://127.0.0.1:1420",
+    "frontendDist": "../dist-native"
+  },
+  "app": {
+    "windows": [{"label": "main", "title": "WorldAtlas", "width": 1260, "height": 850, "minWidth": 360, "minHeight": 520}],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "macOS": { "minimumSystemVersion": "13.3" },
+    "iOS": { "minimumSystemVersion": "16.4" }
+  }
+}

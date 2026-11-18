@@ -1,0 +1,24 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+ATG,AG,Antigua & Barbuda,🇦🇬,North America,,~97118,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BHS,BS,Bahamas,🇧🇸,North America,,~389482,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+BRB,BB,Barbados,🇧🇧,North America,,~287025,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+BLZ,BZ,Belize,🇧🇿,North America,,~390353,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+CAN,CA,Canada,🇨🇦,North America,,~37589262,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+CRI,CR,Costa Rica,🇨🇷,North America,,~5047561,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+CUB,CU,Cuba,🇨🇺,North America,,~11333483,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+DMA,DM,Dominica,🇩🇲,North America,,~71808,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+DOM,DO,Dominican Republic,🇩🇴,North America,,~10738958,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SLV,SV,El Salvador,🇸🇻,North America,,~6453553,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+GRD,GD,Grenada,🇬🇩,North America,,~112003,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+GTM,GT,Guatemala,🇬🇹,North America,,~16604026,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+HTI,HT,Haiti,🇭🇹,North America,,~11263077,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+HND,HN,Honduras,🇭🇳,North America,,~9746117,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+JAM,JM,Jamaica,🇯🇲,North America,,~2948279,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MEX,MX,Mexico,🇲🇽,North America,,~127575529,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+NIC,NI,Nicaragua,🇳🇮,North America,,~6545502,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+PAN,PA,Panama,🇵🇦,North America,,~4246439,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+KNA,KN,Saint Kitts and Nevis,🇰🇳,North America,,~52834,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+LCA,LC,Saint Lucia,🇱🇨,North America,,~182790,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+VCT,VC,Saint Vincent and the Grenadines,🇻🇨,North America,,~110589,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+TTO,TT,Trinidad & Tobago,🇹🇹,North America,,~1394973,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+USA,US,United States,🇺🇸,North America,USA|America|United States of America,~328239523,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD

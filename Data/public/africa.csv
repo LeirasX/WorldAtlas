@@ -1,0 +1,55 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+DZA,DZ,Algeria,🇩🇿,Africa,,~43053054,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+AGO,AO,Angola,🇦🇴,Africa,,~31825295,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BEN,BJ,Benin,🇧🇯,Africa,,~11801151,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+BWA,BW,Botswana,🇧🇼,Africa,,~2303697,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BFA,BF,Burkina Faso,🇧🇫,Africa,,~20321378,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+BDI,BI,Burundi,🇧🇮,Africa,,~11530580,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+CPV,CV,Cabo Verde,🇨🇻,Africa,Cape Verde,~549935,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+CMR,CM,Cameroon,🇨🇲,Africa,,~25876380,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+CAF,CF,Central African Republic,🇨🇫,Africa,,~4745185,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+TCD,TD,Chad,🇹🇩,Africa,,~15946876,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+COM,KM,Comoros,🇰🇲,Africa,,~850886,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+COG,CG,Republic of the Congo,🇨🇬,Africa,,~5380508,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+CIV,CI,Côte d'Ivoire,🇨🇮,Africa,Ivory Coast,~25716544,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+COD,CD,Democratic Republic of the Congo,🇨🇩,Africa,,~86790567,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+DJI,DJ,Djibouti,🇩🇯,Africa,,~973560,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+EGY,EG,Egypt,🇪🇬,Africa,,~100388073,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+GNQ,GQ,Equatorial Guinea,🇬🇶,Africa,,~1355986,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+ERI,ER,Eritrea,🇪🇷,Africa,,~6081196,2020,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+SWZ,SZ,Eswatini,🇸🇿,Africa,Swaziland,~1148130,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+ETH,ET,Ethiopia,🇪🇹,Africa,,~112078730,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+GAB,GA,Gabon,🇬🇦,Africa,,~2172579,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+GMB,GM,Gambia,🇬🇲,Africa,,~2347706,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+GHA,GH,Ghana,🇬🇭,Africa,,~30417856,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+GIN,GN,Guinea,🇬🇳,Africa,,~12771246,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+GNB,GW,Guinea-Bissau,🇬🇼,Africa,,~1920922,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+KEN,KE,Kenya,🇰🇪,Africa,,~52573973,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+LSO,LS,Lesotho,🇱🇸,Africa,,~2125268,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+LBR,LR,Liberia,🇱🇷,Africa,,~4937374,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+LBY,LY,Libya,🇱🇾,Africa,,~6777452,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MDG,MG,Madagascar,🇲🇬,Africa,,~26969307,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+MWI,MW,Malawi,🇲🇼,Africa,,~18628747,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+MLI,ML,Mali,🇲🇱,Africa,,~19658031,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+MRT,MR,Mauritania,🇲🇷,Africa,,~4525696,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+MUS,MU,Mauritius,🇲🇺,Africa,,~1265711,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MAR,MA,Morocco,🇲🇦,Africa,,~36471769,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+MOZ,MZ,Mozambique,🇲🇿,Africa,,~30366036,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+NAM,NA,Namibia,🇳🇦,Africa,,~2494530,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+NER,NE,Niger,🇳🇪,Africa,,~23310715,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+NGA,NG,Nigeria,🇳🇬,Africa,,~200963599,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+RWA,RW,Rwanda,🇷🇼,Africa,,~12626950,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+STP,ST,São Tomé & Príncipe,🇸🇹,Africa,,~215056,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+SEN,SN,Senegal,🇸🇳,Africa,,~16296364,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+SYC,SC,Seychelles,🇸🇨,Africa,,~97625,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SLE,SL,Sierra Leone,🇸🇱,Africa,,~7813215,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+SOM,SO,Somalia,🇸🇴,Africa,,~10192317.3,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+ZAF,ZA,South Africa,🇿🇦,Africa,,~58558270,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SSD,SS,South Sudan,🇸🇸,Africa,,~11062113,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+SDN,SD,Sudan,🇸🇩,Africa,,~42813238,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+TZA,TZ,Tanzania,🇹🇿,Africa,,~58005463,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+TGO,TG,Togo,🇹🇬,Africa,,~8082366,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+TUN,TN,Tunisia,🇹🇳,Africa,,~11694719,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+UGA,UG,Uganda,🇺🇬,Africa,,~44269594,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+ZMB,ZM,Zambia,🇿🇲,Africa,,~17861030,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+ZWE,ZW,Zimbabwe,🇿🇼,Africa,,~14645468,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income

@@ -1,0 +1,45 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+ALB,AL,Albania,🇦🇱,Europe,,~2854191,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+AND,AD,Andorra,🇦🇩,Europe,,~77142,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+AUT,AT,Austria,🇦🇹,Europe,,~8877067,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+BLR,BY,Belarus,🇧🇾,Europe,,~9466856,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BEL,BE,Belgium,🇧🇪,Europe,,~11484055,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+BIH,BA,Bosnia and Herzegovina,🇧🇦,Europe,,~3301000,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BGR,BG,Bulgaria,🇧🇬,Europe,,~6975761,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+HRV,HR,Croatia,🇭🇷,Europe,,~4067500,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+CZE,CZ,Czechia,🇨🇿,Europe,Czech Republic,~10669709,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+DNK,DK,Denmark,🇩🇰,Europe,,~5818553,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+EST,EE,Estonia,🇪🇪,Europe,,~1326590,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+FIN,FI,Finland,🇫🇮,Europe,,~5520314,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+FRA,FR,France,🇫🇷,Europe,,~67059887,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+DEU,DE,Germany,🇩🇪,Europe,,~83132799,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+GRC,GR,Greece,🇬🇷,Europe,,~10716322,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+HUN,HU,Hungary,🇭🇺,Europe,,~9769949,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+ISL,IS,Iceland,🇮🇸,Europe,,~361313,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+IRL,IE,Ireland,🇮🇪,Europe,,~4941444,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+ITA,IT,Italy,🇮🇹,Europe,,~60297396,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+LVA,LV,Latvia,🇱🇻,Europe,,~1912789,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+LIE,LI,Liechtenstein,🇱🇮,Europe,,~38019,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+LTU,LT,Lithuania,🇱🇹,Europe,,~2786844,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+LUX,LU,Luxembourg,🇱🇺,Europe,,~619896,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+MLT,MT,Malta,🇲🇹,Europe,,~502653,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+MDA,MD,Moldova,🇲🇩,Europe,,~2657637,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+MCO,MC,Monaco,🇲🇨,Europe,,~38964,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+MNE,ME,Montenegro,🇲🇪,Europe,,~622137,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+NLD,NL,Netherlands,🇳🇱,Europe,Holland,~17332850,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+MKD,MK,North Macedonia,🇲🇰,Europe,,~2083459,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+NOR,NO,Norway,🇳🇴,Europe,,~5347896,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+POL,PL,Poland,🇵🇱,Europe,,~37970874,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+PRT,PT,Portugal,🇵🇹,Europe,,~10269417,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+ROU,RO,Romania,🇷🇴,Europe,,~19356544,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+RUS,RU,Russia,🇷🇺,Europe,,~144373535,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SMR,SM,San Marino,🇸🇲,Europe,,~33860,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+SRB,RS,Serbia,🇷🇸,Europe,,~6944975,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+SVK,SK,Slovakia,🇸🇰,Europe,,~5454073,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+SVN,SI,Slovenia,🇸🇮,Europe,,~2087946,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+ESP,ES,Spain,🇪🇸,Europe,,~47076781,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+SWE,SE,Sweden,🇸🇪,Europe,,~10285453,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+CHE,CH,Switzerland,🇨🇭,Europe,,~8574832,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+UKR,UA,Ukraine,🇺🇦,Europe,,~44385155,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+GBR,GB,United Kingdom,🇬🇧,Europe,UK|Britain|Great Britain,~66834405,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+VAT,VA,Vatican City,🇻🇦,Europe,Holy See|Vatican,~825,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD

@@ -1,0 +1,43 @@
+name: Verify desktop packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            bundles: app
+          - os: windows-latest
+            bundles: nsis
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: rustup update stable
+      - run: npm ci
+      - run: npm test
+      - run: npm run tauri build -- --bundles ${{ matrix.bundles }}
+      - if: runner.os == 'macOS'
+        run: ditto -c -k --keepParent src-tauri/target/release/bundle/macos/WorldAtlas.app WorldAtlas-macOS.zip
+      - if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorldAtlas-macOS
+          path: WorldAtlas-macOS.zip
+          if-no-files-found: error
+      - if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorldAtlas-Windows
+          path: src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error

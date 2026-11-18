@@ -1,0 +1,15 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+AUS,AU,Australia,🇦🇺,Oceania,,,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+FJI,FJ,Fiji,🇫🇯,Oceania,,~889953,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+KIR,KI,Kiribati,🇰🇮,Oceania,,~117606,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+MHL,MH,Marshall Islands,🇲🇭,Oceania,,~58791,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+FSM,FM,Micronesia,🇫🇲,Oceania,,~113815,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+NRU,NR,Nauru,🇳🇷,Oceania,,~12581,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+NZL,NZ,New Zealand,🇳🇿,Oceania,,~4917000,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+PLW,PW,Palau,🇵🇼,Oceania,,~18008,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+PNG,PG,Papua New Guinea,🇵🇬,Oceania,,~8776109,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+WSM,WS,Samoa,🇼🇸,Oceania,,~197097,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+SLB,SB,Solomon Islands,🇸🇧,Oceania,,~669823,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+TON,TO,Tonga,🇹🇴,Oceania,,~104494,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+TUV,TV,Tuvalu,🇹🇻,Oceania,,~11646,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+VUT,VU,Vanuatu,🇻🇺,Oceania,,~299882,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income

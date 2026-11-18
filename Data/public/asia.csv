@@ -1,0 +1,49 @@
+id,alpha2,country,flag,continent,aliases,population,population__year,population__source,income_group
+AFG,AF,Afghanistan,🇦🇫,Asia,,~38041754,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+ARM,AM,Armenia,🇦🇲,Asia,,~2957731,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+AZE,AZ,Azerbaijan,🇦🇿,Asia,,~10023318,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+BHR,BH,Bahrain,🇧🇭,Asia,,~1641172,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+BGD,BD,Bangladesh,🇧🇩,Asia,,~163046161,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+BTN,BT,Bhutan,🇧🇹,Asia,,~763092,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+BRN,BN,Brunei,🇧🇳,Asia,,~433285,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+KHM,KH,Cambodia,🇰🇭,Asia,,~16486542,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+CHN,CN,China,🇨🇳,Asia,,~1397715000,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+CYP,CY,Cyprus,🇨🇾,Asia,,~1198575,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+GEO,GE,Georgia,🇬🇪,Asia,,~3720382,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+IND,IN,India,🇮🇳,Asia,,~1366417754,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+IDN,ID,Indonesia,🇮🇩,Asia,,~270625568,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+IRN,IR,Iran,🇮🇷,Asia,,~82913906,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+IRQ,IQ,Iraq,🇮🇶,Asia,,~39309783,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+ISR,IL,Israel,🇮🇱,Asia,,~9053300,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+JPN,JP,Japan,🇯🇵,Asia,,~126264931,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+JOR,JO,Jordan,🇯🇴,Asia,,~10101694,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+KAZ,KZ,Kazakhstan,🇰🇿,Asia,,~18513930,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+KWT,KW,Kuwait,🇰🇼,Asia,,~4207083,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+KGZ,KG,Kyrgyzstan,🇰🇬,Asia,,~6456900,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+LAO,LA,Laos,🇱🇦,Asia,,~7169455,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+LBN,LB,Lebanon,🇱🇧,Asia,,~6855713,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MYS,MY,Malaysia,🇲🇾,Asia,,~31949777,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MDV,MV,Maldives,🇲🇻,Asia,,~530953,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+MNG,MN,Mongolia,🇲🇳,Asia,,~3225167,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+MMR,MM,Myanmar,🇲🇲,Asia,Burma,~54045420,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+NPL,NP,Nepal,🇳🇵,Asia,,~28608710,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+PRK,KP,North Korea,🇰🇵,Asia,DPRK|North Korea,~25666161,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+OMN,OM,Oman,🇴🇲,Asia,,~4974986,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+PAK,PK,Pakistan,🇵🇰,Asia,,~216565318,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+PSE,PS,Palestine,🇵🇸,Asia,State of Palestine,~4685306,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+PHL,PH,Philippines,🇵🇭,Asia,,~108116615,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+QAT,QA,Qatar,🇶🇦,Asia,,~2832067,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+SAU,SA,Saudi Arabia,🇸🇦,Asia,,~34268528,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+SGP,SG,Singapore,🇸🇬,Asia,,~5703569,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+KOR,KR,South Korea,🇰🇷,Asia,Republic of Korea|South Korea,~51709098,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: OECD
+LKA,LK,Sri Lanka,🇱🇰,Asia,,~21803000,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+SYR,SY,Syria,🇸🇾,Asia,,~17070135,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+TJK,TJ,Tajikistan,🇹🇯,Asia,,~9321018,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Low income
+THA,TH,Thailand,🇹🇭,Asia,,~69625582,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+TLS,TL,Timor-Leste,🇹🇱,Asia,,~1293119,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+TUR,TR,Türkiye,🇹🇷,Asia,Turkey|Türkiye,~83429615,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+TKM,TM,Turkmenistan,🇹🇲,Asia,,~5942089,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Upper middle income
+ARE,AE,United Arab Emirates,🇦🇪,Asia,,~9770529,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,High income: nonOECD
+UZB,UZ,Uzbekistan,🇺🇿,Asia,,~33580650,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+VNM,VN,Vietnam,🇻🇳,Asia,,~96462106,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income
+YEM,YE,Yemen,🇾🇪,Asia,,~29161922,2019,https://www.naturalearthdata.com/downloads/50m-cultural-vectors/,Lower middle income

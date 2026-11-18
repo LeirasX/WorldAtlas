@@ -1,0 +1,17 @@
+/Context/
+/Data/local/
+/node_modules/
+/dist/
+/src-tauri/target/
+/src-tauri/gen/
+/playwright-report/
+.DS_Store
+.env*
+*.pem
+*.p12
+*.mobileprovision
+*.key
+/test-results/
+/dist-native/
+/dist-local/
+/WorldAtlas-macOS.zip

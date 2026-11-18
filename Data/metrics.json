@@ -1,0 +1,14 @@
+{
+  "area": {"label":"Area","category":"Geography","kind":"number","unit":"km²","sum":true,"description":"Land area from the supplied country table."},
+  "population": {"label":"Population","category":"Geography","kind":"number","sum":true,"description":"Population estimate for the indicated reference year where available."},
+  "density": {"label":"Density","category":"Geography","kind":"number","unit":"people/km²","description":"People per square kilometre."},
+  "net": {"label":"Net salary","category":"Economy","kind":"number","unit":"EUR/month","description":"Monthly net wage as reported or estimated in the source."},
+  "rent": {"label":"Rent","category":"Housing","kind":"number","unit":"EUR/month","description":"Estimated monthly rent. Location and dwelling definitions vary by source."},
+  "essentials": {"label":"Essentials","category":"Economy","kind":"number","unit":"EUR/month","description":"Modelled monthly essential expenses before rent."},
+  "left": {"label":"Money left","category":"Economy","kind":"number","unit":"EUR/month","diverging":true,"description":"Monthly balance after rent and essential expenses."},
+  "rent_burden": {"label":"Rent burden","category":"Housing","kind":"number","unit":"%","description":"Rent divided by net salary, calculated when both are available."},
+  "income_group": {"label":"Income group","category":"Economy","kind":"text","description":"Income grouping recorded in Natural Earth Admin 0."},
+  "language": {"label":"Languages","category":"Language","kind":"text","description":"Language codes and English proficiency as recorded in the source."},
+  "climate": {"label":"Climate","category":"Climate","kind":"text"},
+  "society": {"label":"Society","category":"Society","kind":"text"}
+}
