@@ -4,18 +4,23 @@ export const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South A
 export type Continent = typeof continents[number]
 export type Metric = {
   label: string; category: string; kind: 'number' | 'text'; unit?: string; description?: string
+  aggregationNotes?: string; geographicScope?: string;
   sourceOrganization?: string; indicator?: string; sourceUrl?: string;
+  allowMap?: boolean; allowStatistics?: boolean; allowDifferences?: boolean; percentageDifference?: boolean;
   sum?: boolean; weighted?: boolean; diverging?: boolean; needsReview?: boolean
 }
 export type Metrics = Record<string, Metric>
 export type Observation = {
   value: number | string; raw?: string; estimated?: boolean; calculated?: boolean
+  scope?: string; observationId?: string;
+  currency?: string; method?: string; sourceLocation?: string;
+  sourceCode?: string; sourceStatus?: string;
   verification?: string; estimateStatus?: string; unit?: string; definition?: string; sourceName?: string;
   year?: string; source?: string; basis?: string; confidence?: string; notes?: string; sourceValue?: string
 }
 export type Country = {
   id: string; alpha2: string; name: string; flag: string; continent: Continent; aliases: string[]
-  values: Record<string, Observation>; research?: Record<string, string>; notes?: string
+  values: Record<string, Observation>; history?: Record<string, Observation[]>; research?: Record<string, string>; notes?: string
 }
 export type DataFile = { name: string; text: string }
 export type Dataset = { countries: Country[]; metrics: Metrics; files: string[] }
@@ -49,9 +54,61 @@ export function derive(values: Country['values']): Country['values'] {
 }
 
 const identity = new Set(['id', 'alpha2', 'country', 'flag', 'continent', 'aliases'])
-const metadata = ['source', 'year', 'basis', 'confidence', 'notes', 'sourceValue', 'verification', 'estimateStatus', 'unit', 'definition', 'sourceName'] as const
+const metadata = ['source', 'year', 'basis', 'confidence', 'notes', 'sourceValue', 'verification', 'estimateStatus', 'unit', 'definition', 'sourceName', 'sourceCode', 'sourceStatus', 'currency', 'method', 'sourceLocation', 'scope', 'observationId'] as const
 const missing = /^(?:|—|–|-|n\/?a|null)$/i
 const reserved = new Set(['__proto__', 'prototype', 'constructor'])
+
+export function countryMetricIds(country: Country) {
+  return [...new Set([...Object.keys(country.values), ...Object.keys(country.history ?? {})])]
+}
+
+export function countryObservations(country: Country, id: string): Observation[] {
+  return [...(country.values[id] ? [country.values[id]] : []), ...(country.history?.[id] ?? [])]
+}
+
+function observationIdentity(id: string, item: Observation, metric: Metric) {
+  return JSON.stringify([id, item.year ?? '', item.scope ?? 'national', item.basis ?? '',
+    item.sourceLocation ?? '', item.currency ?? '', item.unit ?? metric.unit ?? '',
+    item.definition ?? metric.description ?? ''])
+}
+
+function parseHistory(raw: string | undefined, values: Country['values'], metrics: Metrics) {
+  const history: Record<string, Observation[]> = {}
+  if (!raw?.trim()) return history
+  const records: unknown = JSON.parse(raw)
+  if (!Array.isArray(records)) throw new Error('Expected an observation history array')
+  const seen = new Set(Object.entries(values).map(([id, item]) => observationIdentity(id, item, metrics[id])))
+  for (const record of records) {
+    if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('Invalid observation history record')
+    const { metricId, ...item } = record as Record<string, unknown>
+    if (typeof metricId !== 'string' || reserved.has(metricId) || !Object.hasOwn(metrics, metricId)) {
+      throw new Error('Register the history metric before importing it')
+    }
+    const metric = metrics[metricId]
+    const validValue = metric.kind === 'number'
+      ? typeof item.value === 'number' && Number.isFinite(item.value)
+      : typeof item.value === 'string'
+    if (!validValue) throw new Error('Invalid history value')
+    for (const [key, value] of Object.entries(item)) {
+      if (key === 'value') continue
+      if (key === 'estimated' || key === 'calculated') {
+        if (typeof value !== 'boolean') throw new Error('Invalid history status')
+      } else if (!(key === 'raw' || metadata.includes(key as typeof metadata[number])) || typeof value !== 'string') {
+        throw new Error('Invalid history metadata')
+      }
+    }
+    if ((item.unit && metric.unit && item.unit !== metric.unit)
+      || (item.definition && metric.description && item.definition !== metric.description)) {
+      throw new Error('History unit or definition conflicts with the metric registry')
+    }
+    const observation = item as Observation
+    const identity = observationIdentity(metricId, observation, metric)
+    if (seen.has(identity)) throw new Error('Duplicate observation context in history')
+    seen.add(identity)
+    history[metricId] = [...(history[metricId] ?? []), observation]
+  }
+  return history
+}
 
 export function loadDataset(files: DataFile[], registry: Metrics, complete = false): Dataset {
   const metrics: Metrics = { ...registry }
@@ -104,7 +161,8 @@ export function loadDataset(files: DataFile[], registry: Metrics, complete = fal
         const value = row[`${field}__${attribute}`]?.trim()
         if (value) observation[attribute] = value
       }
-      if (observation.estimateStatus?.startsWith('unknown') && !observation.estimated) delete observation.estimated
+      if (row[`${field}__calculated`]?.toLowerCase() === 'true') observation.calculated = true
+      if (observation.estimateStatus && !observation.estimated) delete observation.estimated
       values[field] = observation
     }
     let research: Country['research']
@@ -117,8 +175,11 @@ export function loadDataset(files: DataFile[], registry: Metrics, complete = fal
         throw new Error(`${location}: invalid research record`)
       }
     }
+    let history: Country['history']
+    try { history = parseHistory(row.research__history, values, metrics) }
+    catch (error) { throw new Error(`${location}: ${String(error)}`) }
     return { id, alpha2: row.alpha2?.trim() ?? '', name, flag: row.flag?.trim() ?? '', continent,
-      aliases: row.aliases?.split('|').map(alias => alias.trim()).filter(Boolean) ?? [], values: derive(values), research, notes: row.research__markdown?.trim() || undefined }
+      aliases: row.aliases?.split('|').map(alias => alias.trim()).filter(Boolean) ?? [], values: derive(values), history, research, notes: row.research__markdown?.trim() || undefined }
   }))
   if (!countries.length || (complete && countries.length !== 195)) throw new Error('Expected an atlas of 195 countries')
   return { countries: countries.sort((a, b) => a.name.localeCompare(b.name)), metrics, files: files.map(file => file.name) }
@@ -151,7 +212,8 @@ export function search(countries: Country[], input: string) {
   if (!pattern) return countries
   return countries.map(country => {
     const names = [country.name, country.id, country.alpha2, ...country.aliases].map(normalize)
-    const extra = normalize(`${country.continent} ${country.values.language?.value ?? ''} ${expandLanguages(country.values.language)}`)
+    const locations = Object.values(country.history ?? {}).flat().map(item => item.sourceLocation ?? '').join(' ')
+    const extra = normalize(`${country.continent} ${country.values.language?.value ?? ''} ${expandLanguages(country.values.language)} ${locations}`)
     const rank = names.includes(pattern) ? 0 : names.some(name => name.startsWith(pattern)) ? 1
       : names.some(name => name.includes(pattern)) ? 2 : extra.includes(pattern) ? 3
         : pattern.length >= 4 && names.some(name => name.split(/\s+/).some(word => typo(pattern, word))) ? 4 : Infinity
@@ -172,7 +234,7 @@ export function query(input: string, metrics: Metrics): (country: Country) => bo
       return (country: Country) => normalize(country.continent) === value
     }
     if (!Object.hasOwn(metrics, id)) throw new Error(`Unknown metric “${id}”.`)
-    if (operator === ':' && value === 'missing') return (country: Country) => !country.values[id]
+    if (operator === ':' && value === 'missing') return (country: Country) => !countryObservations(country, id).length
     if (value === 'estimated' && operator === ':') return (country: Country) => Boolean(country.values[id]?.estimated)
     if (value.startsWith('confidence=') && operator === ':') {
       return (country: Country) => normalize(country.values[id]?.confidence ?? '') === value.slice(11)
@@ -183,15 +245,18 @@ export function query(input: string, metrics: Metrics): (country: Country) => bo
     const target = parseNumber(value)?.value
     if (metrics[id].kind !== 'number' || target === undefined) throw new Error(`Invalid filter for “${id}”.`)
     return (country: Country) => {
-      const number = country.values[id]?.value
-      if (typeof number !== 'number') return false
-      switch (operator) {
-        case '>': return number > target
-        case '>=': return number >= target
-        case '<': return number < target
-        case '<=': return number <= target
-        default: return number === target
-      }
+      const observations = country.values[id] ? [country.values[id]] : countryObservations(country, id)
+      return observations.some(item => {
+        const number = item.value
+        if (typeof number !== 'number') return false
+        switch (operator) {
+          case '>': return number > target
+          case '>=': return number >= target
+          case '<': return number < target
+          case '<=': return number <= target
+          default: return number === target
+        }
+      })
     }
   })
   return country => filters.every(filter => filter(country))

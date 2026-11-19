@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Download, Filter, Layers3, Maximize2, Minimize2, Search, SlidersHorizontal, X } from 'lucide-react'
 import Papa from 'papaparse'
 import { availableMetrics, Modal, ObservationDetail, RegionPicker } from './App.tsx'
-import { format, parseNumber, query, search, statistics, type Country, type Dataset } from './data.ts'
+import { countryObservations, format, parseNumber, query, search, statistics, type Country, type Dataset } from './data.ts'
 
 const columns = ['area', 'population', 'density', 'net', 'rent', 'left', 'language', 'climate', 'society', 'income_group']
 const labels: Record<string, string> = { population: 'Pop.', density: '/km²', net: 'Net €', rent: 'Rent €', left: 'Left €', language: 'Lang.' }
@@ -22,7 +22,7 @@ function savedViews(): SavedView[] {
 
 function Comparison({ data, countries, close, open }: { data: Dataset; countries: Country[]; close: () => void; open: (country: Country) => void }) {
   const [detail, setDetail] = useState<{ country: Country; id: string }>()
-  const keys = availableMetrics(data).filter(([id]) => countries.some(country => country.values[id]))
+  const keys = availableMetrics(data).filter(([id]) => countries.some(country => countryObservations(country, id).length))
   return <Modal label="Country comparison" onClose={close} className="comparison-dialog">
     <div className="dialog-heading"><div><h2>Country comparison</h2><p>Differences are relative to {countries[0]?.name}.</p></div>
       <button className="icon-button" onClick={close} aria-label="Close comparison"><X size={20} /></button></div>
@@ -36,11 +36,12 @@ function Comparison({ data, countries, close, open }: { data: Dataset; countries
         {countries.map((country, index) => {
           const value = country.values[id]
           const base = countries[0]?.values[id]?.value
-          const delta = index && typeof base === 'number' && typeof value?.value === 'number' ? value.value - base : undefined
-          const percent = delta !== undefined && typeof base === 'number' && base > 0 ? 100 * delta / base : undefined
+          const delta = metric.allowDifferences !== false && index && typeof base === 'number' && typeof value?.value === 'number' ? value.value - base : undefined
+          const percent = metric.percentageDifference !== false && delta !== undefined && typeof base === 'number' && base > 0 ? 100 * delta / base : undefined
           const sign = delta !== undefined && delta > 0 ? '+' : ''
           return <td key={country.id}>{value ? <button className="compare-value" onClick={() => setDetail({ country, id })}>{format(value, metric)}
-            {value.confidence && <small>{value.confidence} confidence</small>}</button> : '—'}
+            {value.confidence && <small>{value.confidence} confidence</small>}</button> : countryObservations(country, id).length > 0
+              ? <button className="compare-value" onClick={() => setDetail({ country, id })}>{countryObservations(country, id).length} local observations</button> : '—'}
             {delta !== undefined && <small className="delta">{sign}{format({ value: delta }, metric)}{percent !== undefined && ` · ${sign}${percent.toFixed(1)}%`}</small>}
           </td>
         })}</tr>)}</tbody>
@@ -77,6 +78,7 @@ function FilterBuilder({ data, set }: { data: Dataset; set: (clause: string) => 
 }
 
 export default function Explore({ data, open, region, setRegion, filter, setFilter, pinned, toggle }: Props) {
+  const [detail, setDetail] = useState<{ country: Country; id: string }>()
   const [term, setTerm] = useState('')
   const [fields, setFields] = useState<string[]>(columns)
   const [sort, setSort] = useState('country')
@@ -91,7 +93,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
   const [status, setStatus] = useState('')
   const available = useMemo(() => availableMetrics(data), [data])
   const shown = fields.filter(id => available.some(([key]) => key === id))
-  const numeric = available.filter(([, metric]) => metric.kind === 'number')
+  const numeric = available.filter(([, metric]) => metric.kind === 'number' && metric.allowStatistics !== false)
   const indicator = numeric.some(([id]) => id === statsMetric) ? statsMetric : numeric[0]?.[0]
   const { rows, error } = useMemo(() => {
     let predicate: (country: Country) => boolean
@@ -156,7 +158,11 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
     <tbody>{rows.map(country => <tr key={country.id}>
       <td className="select-col"><input type="checkbox" aria-label={`Compare ${country.name}`} checked={pinned.includes(country.id)} disabled={pinned.length >= 5 && !pinned.includes(country.id)} onChange={() => toggle(country.id)} /></td>
       <th scope="row"><button className="country-cell" onClick={() => { setFullscreen(false); open(country) }}><span>{country.flag}</span> {country.name}</button></th>
-      {shown.map(id => <td key={id} className={data.metrics[id].kind === 'number' ? 'numeric' : ''} title={format(country.values[id], data.metrics[id], true)}>{format(country.values[id], data.metrics[id])}</td>)}
+      {shown.map(id => <td key={id} className={data.metrics[id].kind === 'number' ? 'numeric' : ''} title={format(country.values[id], data.metrics[id], true)}>
+        {country.history?.[id]?.length ? <button className="compare-value" onClick={() => setDetail({ country, id })}>
+          {country.values[id] ? format(country.values[id], data.metrics[id]) : `${countryObservations(country, id).length} local observations`}
+        </button> : format(country.values[id], data.metrics[id])}
+      </td>)}
     </tr>)}</tbody>
   </table>{!rows.length && <p className="empty">{error ? 'Fix the filter to display countries.' : 'No countries match these filters.'}</p>}</div>
 
@@ -215,6 +221,10 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
         {weighted && weighted.population > 0 && <div><dt>Population-weighted mean</dt><dd>{format({ value: weighted.sum / weighted.population, estimated: true }, metric)}</dd><small>{weighted.count}/{statsRows.length} countries</small></div>}
       </dl> : <p className="empty">No numeric observations in this selection.</p>}
     </section>}
+    {detail && <Modal label={data.metrics[detail.id].label} onClose={() => setDetail(undefined)}>
+      <div className="dialog-heading"><h2>{data.metrics[detail.id].label}</h2><button className="icon-button" aria-label="Close metric details" onClick={() => setDetail(undefined)}><X size={19} /></button></div>
+      <ObservationDetail country={detail.country} id={detail.id} metric={data.metrics[detail.id]} />
+    </Modal>}
     {fullscreen && <Modal label="Expanded country table" className="fullscreen-dialog" onClose={() => setFullscreen(false)}>
       <div className="dialog-heading"><h2>Country table</h2><button className="icon-button" aria-label="Exit expanded table" onClick={() => setFullscreen(false)}><Minimize2 size={19} /></button></div>{table}
     </Modal>}

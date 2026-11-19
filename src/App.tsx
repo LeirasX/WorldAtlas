@@ -3,23 +3,27 @@ import type { ReactNode } from 'react'
 import {
   ArrowDown, ArrowDownRight, ArrowLeft, ArrowRight, BookOpen, ChartNoAxesColumn,
   ChevronRight, Compass, Database, FolderOpen, Globe2, Layers3, Map as MapIcon, Moon, Search,
-  Sun, Users, X,
+  Sun, Users, X, LibraryBig,
 } from 'lucide-react'
 import Markdown from 'react-markdown'
 import registry from '../Data/metrics.json'
-import { continents, format, query, safeUrl, search, type Country, type Dataset, type Metric, type Metrics } from './data.ts'
+import { countryMetricIds, countryObservations, continents, format, query, safeUrl, search, type Country, type Dataset, type Metric, type Metrics, type Observation } from './data.ts'
 import { bundledData, currentData, desktop, desktopFolder, forgetDesktopFolder, importData, resetData } from './platform.ts'
+import { buildKnowledge, importKnowledge, searchKnowledge, stableId, type KnowledgeEntity, type KnowledgeIndex } from './knowledge.ts'
+import { TopicBrowser, EntityPage, RelatedEntities } from './KnowledgeViews.tsx'
+import CountryVisuals from './CountryVisuals.tsx'
 import AtlasMap from './AtlasMap.tsx'
 import Explore from './Explore.tsx'
 
 const metrics = registry as Metrics
 const sections = [
-  { id: 'world', label: 'World', icon: Globe2 },
+  { id: 'world', label: 'Discover', icon: Globe2 },
   { id: 'explore', label: 'Explore', icon: Compass },
   { id: 'map', label: 'Map', icon: MapIcon },
+  { id: 'topics', label: 'Topics', icon: LibraryBig },
   { id: 'countries', label: 'Countries', icon: BookOpen },
 ] as const
-type Page = typeof sections[number]['id']
+type Page = typeof sections[number]['id'] | 'entity'
 type Route = { page: Page; id?: string }
 const regionOrder = ['Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania'] as const
 const regionClass: Record<string, string> = { Europe: 'eu', Asia: 'as', Africa: 'af', 'North America': 'na', 'South America': 'sa', Oceania: 'oc' }
@@ -27,7 +31,9 @@ const regionGlyph: Record<string, string> = { Europe: 'EU', Asia: 'AS', Africa: 
 
 function readRoute(): Route {
   const [page, id] = window.location.hash.slice(1).replace(/^\//, '').split('/')
-  return { page: sections.find(section => section.id === page)?.id ?? 'world', id }
+  let decoded: string | undefined
+  try { decoded = id && decodeURIComponent(id) } catch { decoded = undefined }
+  return { page: page === 'entity' ? 'entity' : sections.find(section => section.id === page)?.id ?? 'world', id: decoded }
 }
 
 function readPreference(key: string) {
@@ -47,37 +53,46 @@ export function Modal({ label, children, onClose, className = '' }: { label: str
   </dialog>
 }
 
-function SearchDialog({ countries, recent, close, open }: { countries: Country[]; recent: string[]; close: () => void; open: (country: Country) => void }) {
+function SearchDialog({ countries, recent, close, open, index, openEntity }: {
+  countries: Country[]; recent: string[]; close: () => void; open: (country: Country) => void
+  index: KnowledgeIndex; openEntity: (entity: KnowledgeEntity) => void
+}) {
   const [term, setTerm] = useState('')
   const [active, setActive] = useState(0)
-  const suggestions = term ? search(countries, term).slice(0, 8) : recent.map(id => countries.find(country => country.id === id)).filter((country): country is Country => Boolean(country))
-  const results = suggestions.length || term ? suggestions : countries.slice(0, 6)
+  const countryResults = term ? search(countries, term).slice(0, 5) : recent.flatMap(id => countries.find(country => country.id === id) ?? [])
+  const list = countryResults.length || term ? countryResults : countries.slice(0, 3)
+  const entities = term ? searchKnowledge(index, term).filter(entity => entity.kind !== 'country').slice(0, 6)
+    : index.entities.filter(entity => entity.kind === 'topic').slice(0, 3)
+  const results = [
+    ...list.map(country => ({ id: country.id, title: country.name, subtitle: country.continent, flag: country.flag, action: () => open(country) })),
+    ...entities.map(entity => ({ id: entity.id, title: entity.title, subtitle: entity.kind, flag: '', action: () => openEntity(entity) })),
+  ]
   useEffect(() => { document.getElementById(`country-option-${active}`)?.scrollIntoView({ block: 'nearest' }) }, [active])
-  return <Modal label="Search countries" onClose={close} className="spotlight">
-    <div className="search-input"><Search size={20} /><input autoFocus placeholder="Search by country, alias, or code" value={term}
-      aria-label="Search by country, alias, or code" role="combobox" aria-expanded="true" aria-controls="country-results"
+  return <Modal label="Search WorldAtlas" onClose={close} className="spotlight">
+    <div className="search-input"><Search size={20} /><input autoFocus placeholder="Countries, places, topics and sources" value={term}
+      aria-label="Search WorldAtlas" role="combobox" aria-expanded="true" aria-controls="country-results"
       aria-activedescendant={results[active] ? `country-option-${active}` : undefined}
       onChange={event => { setActive(0); setTerm(event.target.value) }}
       onKeyDown={event => {
-        if (event.key === 'Enter' && results[active]) open(results[active])
+        if (event.key === 'Enter' && results[active]) results[active].action()
         if (event.key === 'ArrowDown') { event.preventDefault(); setActive(Math.min(results.length - 1, active + 1)) }
         if (event.key === 'ArrowUp') { event.preventDefault(); setActive(Math.max(0, active - 1)) }
       }} /><button className="icon-button" aria-label="Close search" onClick={close}><X size={18} /></button></div>
     <div id="country-results" role="listbox" className="spotlight-results">
-      {results.map((country, index) => <button id={`country-option-${index}`} role="option" aria-selected={active === index} key={country.id}
-        className={active === index ? 'search-result active' : 'search-result'} onMouseMove={() => setActive(index)} onClick={() => open(country)}>
-        <span className="row-flag">{country.flag}</span><strong>{country.name}</strong><span>{country.continent}</span>
+      {results.map((result, position) => <button id={`country-option-${position}`} role="option" aria-selected={active === position} key={result.id}
+        className={active === position ? 'search-result active' : 'search-result'} onMouseMove={() => setActive(position)} onClick={result.action}>
+        <span className="row-flag">{result.flag || <BookOpen size={19} />}</span><strong>{result.title}</strong><span>{result.subtitle}</span>
       </button>)}
-      {!results.length && <p className="empty">No countries match “{term}”.</p>}
+      {!results.length && <p className="empty">No available knowledge matches “{term}”.</p>}
     </div>
   </Modal>
 }
 
-function World({ data, go, open }: { data: Dataset; go: (page: Page, region?: string) => void; open: (country: Country) => void }) {
+function World({ data, go, open, index, openEntity }: { data: Dataset; go: (page: Page, region?: string) => void; open: (country: Country) => void; index: KnowledgeIndex; openEntity: (entity: KnowledgeEntity) => void }) {
   const sum = (id: string) => data.countries.reduce((result, country) => result + (Number(country.values[id]?.value) || 0), 0)
   const facts = [
     { icon: Globe2, value: String(data.countries.length), label: 'Countries' },
-    { icon: Users, value: format({ value: sum('population') }), label: 'World population' },
+    { icon: Users, value: format({ value: sum('population') }), label: 'Snapshot population' },
     ...(sum('area') ? [{ icon: MapIcon, value: `${format({ value: sum('area') })} km²`, label: 'Total land area' }]
       : [{ icon: ChartNoAxesColumn, value: String(availableMetrics(data).length), label: 'Available indicators' }]),
     { icon: Layers3, value: String(new Set(data.countries.map(country => country.continent)).size), label: 'Continents' },
@@ -87,11 +102,16 @@ function World({ data, go, open }: { data: Dataset; go: (page: Page, region?: st
     <section className="hero">
       <AtlasMap countries={data.countries} decorative />
       <div className="hero-content">
-        <h1>Explore the world.</h1>
-        <p>Discover countries, compare how people live, and see the world through its data.</p>
+        <span className="eyebrow">A world of connections</span><h1>Explore the world.</h1>
+        <p>Discover places. Follow an idea. Understand the evidence behind everyday life.</p>
         <button className="hero-button" onClick={() => go('explore')}><Compass size={18} /> Explore countries <ArrowRight size={17} /></button>
       </div>
       <button className="hero-map-link" onClick={() => go('map')}>Open world map <ArrowDownRight size={16} /></button>
+    </section>
+    <section className="world-section discovery-topics">
+      <div className="section-title"><h2>Start with a question.</h2><button className="text-button" onClick={() => go('topics')}>All topics <ArrowRight size={16} /></button></div>
+      <div className="topic-grid">{['Housing', 'Economy', 'Climate'].flatMap(category => index.entities.find(entity => entity.id === stableId('topic', category)) ?? []).map(entity =>
+        <button className="topic-tile" key={entity.id} onClick={() => openEntity(entity)}><BookOpen size={21} /><h2>{entity.title}</h2><p>{entity.summary}</p><span>Explore the evidence <ArrowRight size={15} /></span></button>)}</div>
     </section>
     <div className="facts">
       {facts.map(({ icon: Icon, value, label }) => <div key={label} className="fact"><div className="fact-icon"><Icon size={19} /></div><div><strong>{value}</strong><span>{label}</span></div></div>)}
@@ -117,21 +137,21 @@ function CountryTile({ country, onClick }: { country: Country; onClick: () => vo
 }
 
 export function availableMetrics(data: Dataset) {
-  const ids = new Set(data.countries.flatMap(country => Object.keys(country.values)))
+  const ids = new Set(data.countries.flatMap(country => countryMetricIds(country)))
   return Object.entries(data.metrics).filter(([id]) => ids.has(id))
 }
 
-export function ObservationDetail({ country, id, metric }: { country: Country; id: string; metric: Metric }) {
-  const item = country.values[id]
-  if (!item) return <p>No observation is available.</p>
+function ObservationRecord({ item, metric }: { item: Observation; metric: Metric }) {
   const details = [
-    ['Unit', item.unit ?? metric.unit], ['Verification', item.verification],
+    ['Unit', item.unit ?? metric.unit], ['Currency', item.currency], ['Verification', item.verification],
     ['Estimate status', item.estimateStatus], ['Source series', item.sourceName],
+    ['Source status', item.sourceStatus], ['Source code', item.sourceCode],
     ['Indicator', metric.indicator], ['Source organization', metric.sourceOrganization],
     ['Reference period', item.year], ['Confidence', item.confidence],
     ['Status', [item.calculated && 'Calculated', item.estimated && 'Estimated'].filter(Boolean).join(' · ') || 'Imported'],
     ['Original value', item.raw], ['Source record value', item.sourceValue && item.sourceValue !== item.raw ? item.sourceValue : undefined],
-    ['Method', item.basis], ['Notes', item.notes],
+    ['Geographic scope', item.scope], ['Geographic basis', item.basis], ['Source location', item.sourceLocation],
+    ['Method', item.method], ['Comparability', metric.aggregationNotes], ['Notes', item.notes],
   ]
   const url = item.source && safeUrl(item.source)
   return <><div className="detail-value">{format(item, metric, true)}</div>
@@ -143,12 +163,28 @@ export function ObservationDetail({ country, id, metric }: { country: Country; i
   </>
 }
 
-function Profile({ country, data, back, viewMap, pinned, toggle }: {
-  country: Country; data: Dataset; back: () => void; viewMap: () => void; pinned: boolean; toggle: () => void
+export function ObservationDetail({ country, id, metric }: { country: Country; id: string; metric: Metric }) {
+  const primary = country.values[id]
+  const additional = country.history?.[id] ?? []
+  if (!primary && !additional.length) return <p>No observation is available.</p>
+  return <>
+    {primary && <ObservationRecord item={primary} metric={metric} />}
+    {additional.length > 0 && <section className="research">
+      <p>{additional.length} additional observations by location or reference period.</p>
+      {additional.map((item, index) => <details key={index} open={!primary && index === 0}>
+        <summary>{item.sourceLocation || item.basis || 'National'} · {item.year || 'Period unspecified'}</summary>
+        <ObservationRecord item={item} metric={metric} />
+      </details>)}
+    </section>}
+  </>
+}
+
+function Profile({ country, data, back, viewMap, pinned, toggle, index, openEntity }: {
+  index: KnowledgeIndex; openEntity: (entity: KnowledgeEntity) => void; country: Country; data: Dataset; back: () => void; viewMap: () => void; pinned: boolean; toggle: () => void
 }) {
   const [detail, setDetail] = useState<string>()
   const groups = new Map<string, string[]>()
-  for (const id of Object.keys(country.values)) {
+  for (const id of countryMetricIds(country)) {
     const category = data.metrics[id].category
     groups.set(category, [...(groups.get(category) ?? []), id])
   }
@@ -160,10 +196,12 @@ function Profile({ country, data, back, viewMap, pinned, toggle }: {
       <div className="profile-actions"><button className="button" onClick={viewMap}><MapIcon size={16} /> View on map</button>
         <button className={pinned ? 'button selected' : 'button'} aria-pressed={pinned} onClick={toggle}><Layers3 size={16} /> {pinned ? 'Added to comparison' : 'Add to comparison'}</button></div>
     </section>
+    <CountryVisuals country={country} data={data} />
+    <RelatedEntities index={index} id={'country:' + country.id} openEntity={openEntity} />
     {[...groups].map(([category, ids]) => <section className="profile-section" key={category}><h2>{category}</h2>
       <div className="metric-grid">{ids.map(id => <button className="metric-card" key={id} onClick={() => setDetail(id)}>
-        <span>{data.metrics[id].label}</span><strong>{format(country.values[id], data.metrics[id])}</strong>
-        <small>{data.metrics[id].unit ?? (country.values[id].estimated ? 'Estimate' : '')}</small>
+        <span>{data.metrics[id].label}</span><strong>{country.values[id] ? format(country.values[id], data.metrics[id]) : `${countryObservations(country, id).length} local observations`}</strong>
+        <small>{data.metrics[id].unit ?? (country.values[id]?.estimated ? 'Estimate' : '')}</small>
       </button>)}</div>
     </section>)}
     {country.notes && <section className="panel research notes"><h2>Research notes</h2>
@@ -176,7 +214,7 @@ function Profile({ country, data, back, viewMap, pinned, toggle }: {
       {Object.entries(country.research).filter(([, value]) => value).map(([field, value]) => <div key={field}>
         <dt>{field}</dt><dd>{safeUrl(value) ? <a href={safeUrl(value)} target="_blank" rel="noreferrer">{value}</a> : value}</dd></div>)}
     </dl></details>}
-    {detail && country.values[detail] && <Modal label={data.metrics[detail].label} onClose={() => setDetail(undefined)}>
+    {detail && countryObservations(country, detail).length > 0 && <Modal label={data.metrics[detail].label} onClose={() => setDetail(undefined)}>
       <div className="dialog-heading"><h2>{data.metrics[detail].label}</h2><button className="icon-button" aria-label="Close metric details" onClick={() => setDetail(undefined)}><X size={19} /></button></div>
       <ObservationDetail country={country} id={detail} metric={data.metrics[detail]} />
     </Modal>}
@@ -207,7 +245,7 @@ function MapPage({ data, open, focus, region, filter, setRegion }: {
   const [metric, setMetric] = useState('')
   const [target, setTarget] = useState(focus ?? '')
   const [useFilters, setUseFilters] = useState(true)
-  const selected = availableMetrics(data).filter(([, item]) => item.kind === 'number')
+  const selected = availableMetrics(data).filter(([, item]) => item.kind === 'number' && item.allowMap !== false)
   const visible = useMemo(() => {
     let predicate: (country: Country) => boolean
     try { predicate = useFilters ? query(filter, data.metrics) : () => true } catch { predicate = () => true }
@@ -232,6 +270,19 @@ export default function App() {
   const [{ dataset: fallback, warning }] = useState(() => bundledData(metrics))
   const [data, setData] = useState(() => currentData(metrics, fallback))
   const [route, setRoute] = useState(readRoute)
+  const [packs, setPacks] = useState<string[]>(() => {
+    try { const cached: unknown = JSON.parse(readPreference('atlas:knowledge-packs') ?? '[]'); return Array.isArray(cached) ? cached.filter((item): item is string => typeof item === 'string') : [] }
+    catch { return [] }
+  })
+  const knowledge = useMemo(() => {
+    let index = buildKnowledge(data)
+    const warnings: string[] = []
+    for (const pack of packs) {
+      try { index = importKnowledge(pack, index) } catch (error) { warnings.push(String(error)) }
+    }
+    return { index, warnings }
+  }, [data, packs])
+
   const [region, setRegion] = useState('')
   const [filter, setFilter] = useState('')
   const [showSearch, setShowSearch] = useState(false)
@@ -289,7 +340,7 @@ export default function App() {
 
   function go(page: Page, nextRegion?: string, id?: string) {
     if (nextRegion !== undefined) setRegion(nextRegion)
-    const next = `#/${page}${id ? '/' + id : ''}`
+    const next = `#/${page}${id ? '/' + encodeURIComponent(id) : ''}`
     if (location.hash !== next) location.hash = next
     else window.scrollTo(0, 0)
   }
@@ -297,6 +348,15 @@ export default function App() {
     const next = [country.id, ...recent.filter(id => id !== country.id)].slice(0, 6)
     setRecent(next); storePreference('atlas:recent', JSON.stringify(next))
     setShowSearch(false); go('countries', undefined, country.id)
+  }
+  function openEntity(entity: KnowledgeEntity) {
+    if (entity.kind === 'country') {
+      const country = data.countries.find(item => item.id === entity.countryId)
+      if (country) open(country)
+      return
+    }
+    setShowSearch(false)
+    go('entity', undefined, entity.id)
   }
   function toggle(id: string) {
     setPinned(previous => previous.includes(id) ? previous.filter(item => item !== id) : previous.length < 5 ? [...previous, id] : previous)
@@ -322,25 +382,29 @@ export default function App() {
     </aside>
     <div className="workspace">
       <header className="topbar">
-        <div className="breadcrumb"><span>Atlas</span><ChevronRight size={14} /><strong>{sections.find(section => section.id === route.page)?.label}</strong></div>
+        <div className="breadcrumb"><span>Atlas</span><ChevronRight size={14} /><strong>{route.page === 'entity' ? knowledge.index.entities.find(entity => entity.id === route.id)?.title ?? 'Knowledge' : sections.find(section => section.id === route.page)?.label}</strong></div>
         <a href="#/world" className="mobile-brand"><Globe2 size={19} /> WorldAtlas</a>
-        <div className="top-actions"><button className="search-trigger" onClick={() => setShowSearch(true)}><Search size={17} /><span>Search countries</span><kbd>{isMac ? '⌘ K' : 'Ctrl K'}</kbd></button>
+        <div className="top-actions"><button className="search-trigger" onClick={() => setShowSearch(true)}><Search size={17} /><span>Search WorldAtlas</span><kbd>{isMac ? '⌘ K' : 'Ctrl K'}</kbd></button>
           <button className="icon-button theme-button" aria-label={dark ? 'Use light theme' : 'Use dark theme'} onClick={() => setTheme(dark ? 'light' : 'dark')}>{dark ? <Sun size={19} /> : <Moon size={18} />}</button>
           <button className="icon-button mobile-data" aria-label="Data and sources" onClick={() => setShowData(true)}><Database size={18} /></button>
         </div>
       </header>
       <main className="main">
         {warning && <p role="alert" className="data-warning">{warning}</p>}
-        {route.page === 'world' && <World data={data} go={go} open={open} />}
+        {route.page === 'world' && <World data={data} go={go} open={open} index={knowledge.index} openEntity={openEntity} />}
+        {route.page === 'topics' && <TopicBrowser data={data} index={knowledge.index} openEntity={openEntity} openCountry={open} />}
+        {route.page === 'entity' && (knowledge.index.entities.find(entity => entity.id === route.id)
+          ? <EntityPage key={route.id} data={data} index={knowledge.index} entity={knowledge.index.entities.find(entity => entity.id === route.id)!} openEntity={openEntity} openCountry={open} />
+          : <div className="page-heading"><h1>Subject unavailable</h1><p>This subject is absent from the content on this device.</p><a href="#/topics">Explore available topics</a></div>)}
         {route.page === 'explore' && <Explore data={data} open={open} region={region} setRegion={setRegion} filter={filter} setFilter={setFilter} pinned={pinned} toggle={toggle} />}
         {route.page === 'map' && <MapPage key={route.id ?? 'map'} data={data} open={open} region={region} setRegion={setRegion} filter={filter} focus={country?.id} />}
-        {route.page === 'countries' && (country ? <Profile key={country.id} data={data} country={country} back={() => go('countries')}
+        {route.page === 'countries' && (country ? <Profile key={country.id} index={knowledge.index} openEntity={openEntity} data={data} country={country} back={() => go('countries')}
           viewMap={() => go('map', '', country.id)} pinned={pinned.includes(country.id)} toggle={() => toggle(country.id)} />
           : <Directory countries={data.countries} open={open} />)}
       </main>
       <footer className="footer"><Globe2 size={15} /> WorldAtlas <span>·</span> <button className="text-button" onClick={() => setShowData(true)}>Data & sources</button></footer>
     </div>
-    {showSearch && <SearchDialog countries={data.countries} recent={recent} close={() => setShowSearch(false)} open={open} />}
+    {showSearch && <SearchDialog index={knowledge.index} openEntity={openEntity} countries={data.countries} recent={recent} close={() => setShowSearch(false)} open={open} />}
     {showData && <Modal label="Data and sources" onClose={() => setShowData(false)}>
       <div className="dialog-heading"><h2>Data & sources</h2><button className="icon-button" aria-label="Close data details" onClick={() => setShowData(false)}><X size={19} /></button></div>
       <dl className="details">
@@ -373,6 +437,24 @@ export default function App() {
           } catch (error) { setImportStatus(String(error)) }
         }}>Restore bundled data</button>}
       </div>
+      <details className="research"><summary>Import research articles and relationships</summary>
+        <p>Version 1 JSON packs contain entities, named sources and relationships. Imported content is stored on this device.</p>
+        <label className="button file-button">Import knowledge JSON<input type="file" accept=".json,application/json" aria-label="Import knowledge JSON" onChange={async event => {
+          const file = event.target.files?.[0]
+          event.target.value = ''
+          if (!file) return
+          try {
+            const raw = await file.text()
+            importKnowledge(raw, knowledge.index)
+            const next = [...packs, raw]
+            setPacks(next)
+            try { localStorage.setItem('atlas:knowledge-packs', JSON.stringify(next)); setImportStatus('Knowledge imported and saved on this device.') }
+            catch { setImportStatus('Knowledge imported for this session. Device storage is unavailable.') }
+          } catch (error) { setImportStatus(String(error)) }
+        }} /></label>
+        {packs.length > 0 && <button className="button" onClick={() => { setPacks([]); storePreference('atlas:knowledge-packs', '[]'); setImportStatus('Imported knowledge removed. Built-in research is available.') }}>Remove imported knowledge</button>}
+        {knowledge.warnings.map((warning, index) => <p key={index} role="alert">{warning}</p>)}
+      </details>
       {importStatus && <p role="status">{importStatus}</p>}
       <p className="muted">Map boundaries and the public population snapshot are from <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a>.</p>
     </Modal>}

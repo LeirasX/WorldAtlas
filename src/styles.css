@@ -173,7 +173,7 @@ thead th { position: sticky; top: 0; z-index: 2; background: var(--chrome); vert
 .stat-grid dd { font-size: 19px; color: var(--text); font-weight: 700; letter-spacing: -.03em; margin: 4px 0 0; font-variant-numeric: tabular-nums }
 .empty { color: var(--muted); padding: 24px; text-align: center }
 .atlas-map { position: relative; background: var(--map-water); border: 1px solid var(--line); border-radius: 17px; overflow: hidden; min-height: 380px }
-.atlas-map svg { display: block; width: 100%; height: 100%; min-height: inherit }
+.atlas-map > svg { display: block; width: 100%; height: 100%; min-height: inherit }
 .atlas-map:not(.atlas-art) > svg { touch-action: none; cursor: grab; max-height: 70vh }
 .atlas-map:not(.atlas-art) > svg:active { cursor: grabbing }
 .atlas-map .graticule { fill: none; stroke: color-mix(in srgb, var(--map-land) 45%, transparent); stroke-width: .65 }
@@ -310,3 +310,144 @@ thead th { position: sticky; top: 0; z-index: 2; background: var(--chrome); vert
 .statistics-controls select, .filter-builder select { min-width: 0; max-width: 100% }
 .column-option { max-width: 100% }
 .dialog-heading > div { min-width: 0 }
+
+/* Shared product tokens and the first connected exploration screens. */
+:root {
+  --accent: #2967cb;
+  --accent-soft: #e8f0ff;
+  --bg: #f6f7fa;
+  --chrome: #f0f2f7;
+  --chart-temp: #d88a48;
+  --chart-rain: #88adce;
+}
+:root[data-theme=dark] { --bg: #10151f; --chrome: #151c28; --accent: #a6c5ff; --accent-soft: #253750 }
+@media(prefers-color-scheme: dark) {
+  :root[data-theme=system] { --bg: #10151f; --chrome: #151c28; --accent: #a6c5ff; --accent-soft: #253750 }
+}
+.sidebar { background: var(--chrome); padding-top: 25px; gap: 36px }
+.brand { font-weight: 680; letter-spacing: -.045em }
+.brand-mark { border-radius: 50%; background: #243f6c; box-shadow: none }
+.nav-link { font-weight: 550; padding-block: 12px; color: var(--muted) }
+.nav-link.current { background: var(--surface); color: var(--text); box-shadow: 0 2px 7px #111b3020 }
+.topbar { background: color-mix(in srgb, var(--surface) 85%, transparent); height: 65px }
+.breadcrumb { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis }
+.top-actions { flex-shrink: 0 }
+.main { max-width: 1460px; padding-top: 27px }
+.eyebrow { display: block; font-size: 11px; text-transform: uppercase; font-weight: 650; letter-spacing: .13em; color: var(--muted); margin-bottom: 13px }
+.hero { border-radius: 22px; min-height: 330px; background: #19304f; border-color: #274565; box-shadow: none }
+.hero .eyebrow { color: #afc5e2 }
+.hero h1 { font-size: clamp(42px, 5vw, 70px); font-weight: 650; letter-spacing: -.065em }
+.hero-content { max-width: 580px; width: 61%; padding-block: 34px }
+.hero p { max-width: 310px; font-size: 15px; color: #bfd0e6 }
+.hero-button { box-shadow: none; font-weight: 600 }
+.hero .atlas-art { --map-land: #7695b7; --map-muted: #607fa4; --map-stroke: #9db6cc8a; opacity: .85 }
+.hero .atlas-art .map-sphere { fill: none; stroke: none }
+.facts { border-block: 1px solid var(--line); padding-block: 9px; gap: 0; margin-top: 25px }
+.fact { box-shadow: none; background: transparent; border: 0; border-right: 1px solid var(--line); border-radius: 0; padding-block: 5px; min-height: 57px }
+.fact:last-child { border-right: 0 }
+.fact-icon { background: transparent; width: 28px }
+.fact strong { font-weight: 620; font-size: 22px }
+.world-section h2 { font-size: 22px; font-weight: 640 }
+.topic-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px }
+.topic-tile { padding: 21px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); text-align: left; display: flex; flex-direction: column; min-width: 0; align-items: start; color: var(--text); transition: border-color .15s, transform .15s }
+.topic-tile:hover { border-color: var(--accent); transform: translateY(-2px) }
+.topic-tile > svg { color: var(--accent); margin-bottom: 25px; stroke-width: 1.6 }
+.topic-tile h2 { font-size: 23px; font-weight: 620; letter-spacing: -.04em }
+.topic-tile p { color: var(--muted); margin: 10px 0 25px; line-height: 1.65; font-size: 13px }
+.topic-tile > span { margin-top: auto; color: var(--accent); font-size: 12px; font-weight: 600; display: flex; gap: 10px; align-items: center }
+.editorial-heading { margin: 15px 0 30px; max-width: 800px }
+.editorial-heading h1 { font-size: clamp(34px,4vw,56px); line-height: 1.08; font-weight: 630; letter-spacing: -.055em; overflow-wrap: anywhere }
+.editorial-heading p { font-size: 17px; line-height: 1.7; color: var(--muted); margin-top: 18px; max-width: 700px }
+.topic-search { max-width: 370px; margin-bottom: 18px }
+.topic-search input { flex: 1; border: 0 !important; padding: 0 !important; width: 100%; background: transparent !important; min-height: 20px !important }
+.related-section h2 { margin-bottom: 13px }
+.related-links { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px }
+.related-link { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); background: var(--surface); text-align: left; padding: 12px; border-radius: 10px; min-width: 0 }
+.related-link > span { flex: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 590; font-size: 12px }
+.related-link small { display: block; font-size: 10px; text-transform: capitalize; font-weight: 400; margin-top: 4px }
+.related-link svg { flex: none; color: var(--muted) }
+.related-link:hover { border-color: var(--accent) }
+.knowledge-evidence { padding: 22px; margin-bottom: 18px }
+.knowledge-evidence .section-title { flex-wrap: wrap }
+.knowledge-evidence select { max-width: min(100%,470px) }
+.topic-definition { max-width: 750px; line-height: 1.8; font-size: 15px }
+.evidence-summary { display: flex; gap: 35px; flex-wrap: wrap; margin-block: 25px }
+.evidence-summary strong { font-size: 31px; font-weight: 620; letter-spacing: -.04em }
+.evidence-summary small { display: block; font-size: 11px; margin-top: 3px; font-weight: 400; letter-spacing: 0 }
+.distribution { height: 150px; display: flex; gap: 3px; align-items: end; position: relative; padding-bottom: 24px; margin: 15px 0; max-width: 650px }
+.distribution > div:not(.distribution-range) { flex: 1; max-height: 110px; background: #769dc9; border-radius: 4px 4px 0 0 }
+.distribution-range { display: flex; justify-content: space-between; position: absolute; left: 0; right: 0; bottom: 0; color: var(--muted); font-size: 11px }
+.knowledge-evidence > .text-button { margin-top: 13px }
+.topic-deeper { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 18px }
+.topic-observations { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 18px }
+.topic-observations > div { padding: 14px; border: 1px solid var(--line); border-radius: 11px; min-width: 0 }
+.topic-observations strong, .topic-observations span { display: block; margin: 7px 0 }
+.topic-observations span { font-size: 11px; color: var(--muted) }
+.topic-observations p { font-size: 12px; color: var(--muted); overflow-wrap: anywhere }
+.topic-observations a { font-size: 12px }
+.article-body { max-width: 750px; font-size: 16px; line-height: 1.85; margin: 20px 0 30px }
+.article-body p { margin-bottom: 15px }
+.country-visuals { margin-top: 22px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px }
+.country-visuals > div { padding: 20px; min-width: 0 }
+.country-visuals h2 { font-size: 20px; margin-bottom: 5px; font-weight: 620 }
+.country-visuals p { font-size: 12px }
+.context-indicator { margin: 21px 0 }
+.context-indicator > div:first-child { display: flex; gap: 10px; align-items: start; justify-content: space-between; font-size: 12px }
+.context-indicator strong { font-weight: 650; white-space: nowrap }
+.context-range { height: 7px; border-radius: 8px; background: var(--line); margin: 12px 0 8px; position: relative }
+.context-range i { position: absolute; width: 10px; height: 10px; top: -1.5px; border-radius: 50%; background: var(--accent); transform: translateX(-50%) }
+.context-range b { position: absolute; height: 13px; width: 1px; background: var(--muted); top: -3px }
+.context-indicator small, .context-chart > small { font-size: 10px; line-height: 1.5 }
+.climate-chart .section-title { align-items: start; flex-wrap: wrap }
+.climate-chart .section-title > span { font-size: 11px; color: var(--muted) }
+.climate-chart svg { width: 100%; margin-top: 15px }
+.climate-chart text { fill: var(--muted); font-size: 10px; font-family: inherit }
+.climate-key { display: flex; gap: 16px; flex-wrap: wrap; margin-block: 12px; font-size: 10px; color: var(--muted) }
+.climate-key i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--chart-temp); margin-right: 4px }
+.climate-key > span:last-child i { background: var(--chart-rain) }
+.climate-chart > small { font-size: 10px; line-height: 1.5 }
+.profile-banner { border-radius: 18px; padding: 27px; box-shadow: none }
+.profile-banner h1 { font-weight: 620 }
+.metric-card strong { font-weight: 620 }
+.atlas-map:not(.atlas-art) { height: clamp(400px,62vh,690px); min-height: 380px; background: var(--map-water) }
+.atlas-map:not(.atlas-art) > svg { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none }
+.map-sphere { fill: var(--map-water); stroke: var(--line); stroke-width: 1 }
+.projection-controls { position: absolute; top: 13px; left: 13px; display: flex; gap: 3px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; box-shadow: var(--shadow) }
+.projection-controls button { display: flex; align-items: center; gap: 6px; padding: 7px 10px; border: 0; background: transparent; font-size: 12px; color: var(--muted); border-radius: 7px }
+.projection-controls button.active { background: var(--accent-soft); color: var(--accent) }
+.map-tooltip { top: 64px; font-size: 12px; max-width: calc(100% - 72px) }
+.map-legend { border-radius: 12px; width: 185px; padding: 12px; gap: 8px }
+@media(max-width: 1000px) {
+  .related-links { grid-template-columns: repeat(2,minmax(0,1fr)) }
+  .country-visuals { grid-template-columns: 1fr }
+}
+@media(max-width: 720px) {
+  .sidebar { padding-top: 4px }
+  .sidebar nav { grid-template-columns: repeat(5,minmax(0,1fr)) }
+  .nav-link { padding-block: 7px; font-size: 10px; gap: 4px }
+  .nav-link.current { box-shadow: none; background: var(--accent-soft); color: var(--accent) }
+  .topbar { height: 58px }
+  .hero { min-height: 305px }
+  .hero-content { width: 100%; padding: 23px 18px 56px }
+  .hero .eyebrow { font-size: 9px }
+  .hero h1 { font-size: 40px }
+  .topic-grid { grid-template-columns: 1fr }
+  .discovery-topics .topic-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 5px }
+  .discovery-topics .topic-tile { flex: 0 0 82%; scroll-snap-align: start }
+  .topic-tile { padding: 18px }
+  .topic-tile > svg { margin-bottom: 15px }
+  .facts { gap: 0 }
+  .fact { min-height: 60px }
+  .fact:nth-child(2) { border-right: 0 }
+  .editorial-heading { margin-block: 15px 24px }
+  .editorial-heading p { font-size: 15px }
+  .related-links { grid-template-columns: 1fr }
+  .related-section .related-links { max-height: 320px; overflow: auto }
+  .knowledge-evidence { padding: 14px }
+  .topic-observations { grid-template-columns: 1fr }
+  .country-visuals > div { padding: 15px }
+  .atlas-map:not(.atlas-art) { height: 58vh; min-height: 350px }
+  .map-legend { font-size: 10px; width: 155px }
+}
+
+.map-country.focused > path { stroke: var(--accent); stroke-width: 1.7 }

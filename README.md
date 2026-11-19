@@ -86,3 +86,30 @@ Public population and income-group values come from the corresponding Natural Ea
 The first partial research release is preserved in the ignored `Context/Research/` folder, with the integration report and pre-integration snapshots. Run `python3 scripts/integrate-research.py` to validate and reapply it after regenerating the original local data. The importer refuses to overwrite edited WDI values.
 
 The 30 source-attributed WDI indicators use independent `wb_` keys in the local CSVs to retain distinct definitions and reference periods. Their estimate status is unknown and confidence was not individually assessed. Original financial estimates carry an explicit unverified label, and automatic financial calculations are skipped for those observations. The public dataset retains its separate scope, with Australia's income classification corrected using the World Bank FY2027 table.
+
+## Research rounds 1–4
+
+With all four releases preserved under `Context/Research/`, run `python3 scripts/merge-research-rounds.py` to validate their six continent tables and merge compatible records into `Data/local/`. It retains existing WDI keys and uses `r2_`, `r3_` and `r4_` keys for later releases. Conflicting values, periods, or provenance are withheld from replacement and recorded in `rounds-conflicts.csv`. Identical existing observations are counted as overlaps.
+
+The generated `rounds-integration-report.md`, `rounds-audit.json`, and `rounds-coverage.csv` describe observations, coverage, reference periods, and research gaps. The 11 intentionally unresearched columns remain blank. Use `python3 -m unittest discover -s tests -p '*_test.py'` for merge-conflict tests and `WORLDATLAS_TEST_LOCAL=1 npx playwright test` after a private production build for browser verification.
+
+Round 2 retains national climate normals for 1991–2020, individual ILO source notes and currency coverage, and OECD annual-hours caveats. Local-currency series are excluded from pooled statistics and automatic differences. OECD annual-hours differences and Celsius percentage differences are disabled. All four releases stay in the local dataset pending publication approval.
+
+
+Round 3 retains ILO median earnings with unspecified gross/net basis, the OECD single-worker 2025 tax scenario, historical May 2019 employment-law case studies, October 2025 WBL leave cases, and distinct UK/Ireland housing estimates. Modelled and calculated observations preserve their supplied status. Currency, geographic scope, source locations and methods are available in metric details. Multi-city legal conflicts stay withheld and are listed in `rounds-upstream-conflicts.csv`.
+
+
+Round 4 retains 73 national and 80 local observations. The six local CSVs hold primary national values plus a reserved `research__history` JSON column containing additional dated or geographically scoped observations. Each record has a metric ID, typed value, period, unit, definition, sources and contextual metadata. Matching repeats are deduplicated. Conflicting records in the same context are withheld for review. A compatible observation for another year is retained without replacing the existing primary.
+
+Profiles and source details expose the additional observations. Explore and comparisons show the number of local records when there is no primary national value. Country search also matches their location names. Numeric filters use the primary observation when present, or match any local observation when it is absent. Sorting, statistics, maps and CSV exports use primary national values. Canadian city/CMA data is never substituted for a national estimate.
+
+The `ResearchImport/` input folder is ignored by Git. The four archives used for this integration were located in Downloads and preserved under `Context/Research/`.
+
+
+## Connected exploration: first redesign phase
+
+The shared React application now has Discover, Explore, Map, Topics and Countries navigation; global entity search; source-backed topic and place pages; related-subject navigation; country comparison charts and complete monthly climate normals; and offline flat/globe maps with zoom, rotation and country focus. Existing filters, comparisons, statistics and provenance details remain available.
+
+`src/knowledge.ts` derives entities and relationships from the currently loaded dataset. Validated version-1 JSON content packs can add sourced articles and relationships through Data & Sources, with browser-local persistence. They do not alter country identities or statistical observations. See [product architecture and roadmap](docs/PRODUCT_FOUNDATION.md) and [content-pack format](docs/CONTENT_IMPORT.md).
+
+Validation for this phase: 17 TypeScript tests, six Python importer tests, 14 private-data desktop/mobile browser checks and six public-build desktop/mobile checks passed. Private, GitHub Pages and native production builds passed. The macOS app is ad-hoc signed and not notarized. Vite reports large bundle warnings, especially for the complete local provenance dataset. Windows and iOS builds were not run on this host. No changes were published.
