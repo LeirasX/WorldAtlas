@@ -125,3 +125,19 @@ Four original source-backed introductions cover inflation, purchasing power, int
 GitHub Pages deploys tested pushes to main. Each deployment has a unique artifact name and checks artifact availability before publishing. Private research, archives and device-local imports remain excluded. The website URL stays https://leirasx.github.io/WorldAtlas/.
 
 Remaining work includes broader reviewed articles (politics, law, healthcare, history and culture), validated city coordinates, dated events, occupation-specific research, and richer dimensional comparison interfaces. Existing comparison safeguards remain in place; no disposable-income estimates are fabricated. Windows and iOS builds require their toolchains and signing; the macOS build is ad-hoc signed, not notarized.
+
+## Compact country exploration
+
+Profiles now open with one population/area/density overview, a single temperature-line/rainfall-bar chart when complete compatible monthly data exists, and a few people/nature/economy facts. Subject records, alternate definitions, historical/local observations, source records and unverified financial estimates remain expandable. `Show all data` exposes searchable complete records. No CSVs or registry definitions changed.
+
+Presentation defaults are explicit in `src/presentation.ts`: defined WDI series take precedence over original snapshots; land area is labeled separately; density is never recomputed using mismatched years. GDP is economic output, not salary. Unspecified gross/net earnings do not become a generic “typical salary.” OECD take-home figures retain their year, single/childless average-wage scenario, currency and modeled status. Alternatives remain available; selection is not a claim of independent verification.
+
+Comparison defaults are compact, with additional metrics, fullscreen and full-record access. Differences require matching dates, currencies, scope and recorded definitions/methods, as well as the registry's comparability permissions. Filters, sorting, statistics, column selection, CSV export and saved views remain available; Statistics is collapsed until requested.
+
+World uses a collapsible desktop sidebar, compact lens/layer controls, region options and selected-country highlighting. Topics use searchable lists. Reduced-motion preferences are respected.
+
+Each expanded subject offers **Copy AI prompt**. Preview the bounded selected context, optionally add a question, then copy manually or through the clipboard button. Prompts include country names, relevant definitions, periods, sources and uncertainty instructions. They never call an AI API or copy the complete database. Device-local research is only included when the user explicitly requests a prompt from that dataset.
+
+The public build continues using only approved public data. Climate and other research-rich summaries appear in the local edition wherever those observations exist; absence of public observations is not filled with private material or invented values.
+
+Simplification verification: 27 TypeScript/data/model tests, six Python importer tests, and 32 desktop/mobile browser scenarios passed (18 local research, 14 public). Pages, private web and macOS production builds passed. The macOS app passed strict signature verification; it remains ad-hoc signed and not notarized. Windows/iOS builds were not run. Vite's large-bundle warnings remain, especially for the complete local research payload.

@@ -38,11 +38,20 @@ function getOutlines() {
 
 type Props = {
   countries: Country[]; visible?: Set<string>; metricId?: string; metric?: Metric
-  onSelect?: (country: Country) => void; decorative?: boolean; focus?: string
+  onSelect?: (country: Country) => void; decorative?: boolean; focus?: string; selected?: string
 }
 
-export default function AtlasMap({ countries, visible, metricId, metric, onSelect, decorative, focus }: Props) {
+export default function AtlasMap({ countries, visible, metricId, metric, onSelect, decorative, focus, selected }: Props) {
   const [shapes, setShapes] = useState<Outline[]>([])
+  const labelShapes = useMemo(() => {
+    const labels = new Map<string, { shape: Outline; area: number }>()
+    for (const shape of shapes) {
+      if (!['CAN', 'USA', 'BRA', 'RUS', 'CHN', 'IND', 'AUS', 'ZAF', 'DZA'].includes(shape.id)) continue
+      const area = geoArea(shape.geometry)
+      if (area > (labels.get(shape.id)?.area ?? -1)) labels.set(shape.id, { shape, area })
+    }
+    return [...labels.values()].map(item => item.shape)
+  }, [shapes])
   const [globe, setGlobe] = useState(false)
   const [rotation, setRotation] = useState<[number, number]>([-10, -18])
   const [error, setError] = useState(false)
@@ -158,7 +167,7 @@ export default function AtlasMap({ countries, visible, metricId, metric, onSelec
           const front = !globe || geoDistance([-rotation[0], -rotation[1]], shape.point) < Math.PI / 2
           if (globe && !path && !front) return null
           const interactive = !decorative && Boolean(country)
-          return <g key={shape.id} className={interactive ? `map-country${shape.id === focus ? ' focused' : ''}` : ''}
+          return <g key={shape.id} className={interactive ? `map-country${shape.id === (selected ?? focus) ? ' focused' : ''}` : ''}
             role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined} aria-label={interactive ? country?.name : undefined}
             onPointerEnter={decorative ? undefined : () => setHover(shape)} onPointerLeave={() => setHover(undefined)}
             onFocus={() => setHover(shape)} onBlur={() => setHover(undefined)}
@@ -170,7 +179,7 @@ export default function AtlasMap({ countries, visible, metricId, metric, onSelec
           </g>
         })}
       </g>
-      {!decorative && <g className="geographic-labels" aria-hidden="true" pointerEvents="none" transform={globe ? undefined : `translate(${view.x} ${view.y}) scale(${view.zoom})`}>{shapes.filter(shape => ['CAN', 'USA', 'BRA', 'RUS', 'CHN', 'IND', 'AUS', 'ZAF', 'DZA'].includes(shape.id)).map(shape => {
+      {!decorative && <g className="geographic-labels" aria-hidden="true" pointerEvents="none" transform={globe ? undefined : `translate(${view.x} ${view.y}) scale(${view.zoom})`}>{labelShapes.map(shape => {
         if (globe && geoDistance([-rotation[0], -rotation[1]], shape.point) >= Math.PI / 2.3) return null
         const point = globe ? projection(shape.point) : [shape.x, shape.y]
         return point ? <text key={shape.id} x={point[0]} y={point[1]} textAnchor="middle" fontSize={9 / (globe ? 1 : Math.sqrt(view.zoom))}>{byId.get(shape.id)?.name ?? shape.name}</text> : null

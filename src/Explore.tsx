@@ -220,7 +220,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
         <button className="button" disabled={chosen.length < 2} onClick={() => setCompare(true)}><Layers3 size={16} /> Compare{chosen.length > 0 && ` (${chosen.length}/5)`}</button></div>
       {chosen.length > 0 && <div className="chosen">{chosen.map(country => <button className="chip" onClick={() => toggle(country.id)} key={country.id}>{country.flag} {country.name}<X size={13} /></button>)}</div>}
     </section>
-    {indicator && <section className="panel statistics">
+    {indicator && <details className="panel statistics"><summary>Statistics</summary>
       <div className="section-title"><div><h2>Statistics</h2><p>{stats?.count ?? 0}/{statsRows.length} countries · {items.filter(item => item.estimated).length} estimates</p></div>
         <div className="statistics-controls">
           <label className="check"><input type="checkbox" checked={selectedStats} onChange={event => setSelectedStats(event.target.checked)} /> Selected only</label>
@@ -232,7 +232,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
           ...(metric.sum ? [['Sum', stats.sum]] : [])].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{format({ value: Number(value), estimated: items.some(item => item.estimated) }, metric)}</dd></div>)}
         {weighted && weighted.population > 0 && <div><dt>Population-weighted mean</dt><dd>{format({ value: weighted.sum / weighted.population, estimated: true }, metric)}</dd><small>{weighted.count}/{statsRows.length} countries</small></div>}
       </dl> : <p className="empty">No numeric observations in this selection.</p>}
-    </section>}
+    </details>}
     {detail && <Modal label={data.metrics[detail.id].label} onClose={() => setDetail(undefined)}>
       <div className="dialog-heading"><h2>{data.metrics[detail.id].label}</h2><button className="icon-button" aria-label="Close metric details" onClick={() => setDetail(undefined)}><X size={19} /></button></div>
       <ObservationDetail country={detail.country} id={detail.id} metric={data.metrics[detail.id]} />

@@ -67,3 +67,15 @@ test('comparison differences require matching periods, definitions and explicit 
   assert.equal(canCompare(a, { ...a, sourceLocation: 'A city' }, metric), false)
   assert.equal(canCompare(a, { ...a }, { ...metric, allowDifferences: false }), false)
 })
+
+test('tax and employment-rights prompts omit unrelated preferred summary metrics', () => {
+  const c = structuredClone(country)
+  c.values.wb_gdp_per_capita_usd = { value: 32000, year: '2025' }
+  c.values.r3_legal_standard_workday_hours_2019 = { value: 8, year: '2019-05' }
+  c.values.r2_actual_weekly_hours_employed = { value: 37, year: '2025' }
+  const d = { ...data, countries: [c], metrics: { ...data.metrics, wb_gdp_per_capita_usd: { label: 'GDP per person', category: 'Economy', kind: 'number' as const }, r3_legal_standard_workday_hours_2019: { label: 'Legal workday', category: 'Work', kind: 'number' as const }, r2_actual_weekly_hours_employed: { label: 'Weekly hours', category: 'Work', kind: 'number' as const } } }
+  assert.doesNotMatch(makeResearchPrompt([c], d, 'Taxes'), /32000/)
+  const legal = makeResearchPrompt([c], d, 'Employment rights')
+  assert.match(legal, /2019-05/)
+  assert.doesNotMatch(legal, /Weekly hours/)
+})

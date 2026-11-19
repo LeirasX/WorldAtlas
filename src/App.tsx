@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import {
   ArrowDown, ArrowLeft, ArrowRight, BookOpen,
   ChevronRight, Database, FolderOpen, Globe2, Layers3, Map as MapIcon, Moon, Search,
-  Sun, X, LibraryBig,
+  Sun, X, LibraryBig, PanelLeft,
 } from 'lucide-react'
 import Markdown from 'react-markdown'
 import registry from '../Data/metrics.json'
@@ -202,6 +202,7 @@ export default function App() {
   const [showData, setShowData] = useState(false)
   const [importStatus, setImportStatus] = useState(warning)
   const [folderAvailable, setFolderAvailable] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => readPreference('atlas:sidebarCollapsed') !== 'false')
   const [theme, setTheme] = useState(() => readPreference('atlas:theme') || 'system')
   const [pinned, setPinned] = useState<string[]>([])
   const [recent, setRecent] = useState<string[]>(() => {
@@ -284,18 +285,18 @@ export default function App() {
   const observations = data.countries.flatMap(item => Object.values(item.values))
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform)
   const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
-  return <div className="shell">
-    <aside className="sidebar">
-      <a className="brand" href="#/world"><span className="brand-mark"><Globe2 size={23} /></span><span>ORBIS</span></a>
-      <nav aria-label="Main navigation">{sections.map(({ id, label, icon: Icon }) => <a key={id} href={`#/${id}`} className={route.page === id ? 'nav-link current' : 'nav-link'} aria-current={route.page === id ? 'page' : undefined}>
+  return <div className={sidebarCollapsed ? "shell sidebar-collapsed" : "shell"}>
+    <aside className="sidebar" id="primary-sidebar">
+      <a className="brand" href="#/world" aria-label="ORBIS"><span className="brand-mark"><Globe2 size={23} /></span><span>ORBIS</span></a>
+      <nav aria-label="Main navigation">{sections.map(({ id, label, icon: Icon }) => <a key={id} aria-label={label} title={label} href={`#/${id}`} className={route.page === id ? 'nav-link current' : 'nav-link'} aria-current={route.page === id ? 'page' : undefined}>
         <Icon size={19} strokeWidth={1.9} /><span>{label}</span></a>)}</nav>
-      <div className="sidebar-bottom"><button className="nav-link" onClick={() => setShowData(true)}><Database size={18} /> <span>Data & sources</span></button>
+      <div className="sidebar-bottom"><button className="nav-link" aria-label="Data & sources" title="Data & sources" onClick={() => setShowData(true)}><Database size={18} /> <span>Data & sources</span></button>
         <div className="offline-label"><i /> Local data</div>
       </div>
     </aside>
     <div className="workspace">
       <header className="topbar">
-        <div className="breadcrumb"><span>Atlas</span><ChevronRight size={14} /><strong>{route.page === 'entity' ? knowledge.index.entities.find(entity => entity.id === route.id)?.title ?? 'Knowledge' : sections.find(section => section.id === route.page)?.label}</strong></div>
+        <div className="navigation-context"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'} aria-controls="primary-sidebar" aria-expanded={!sidebarCollapsed} onClick={() => setSidebarCollapsed(current => { storePreference('atlas:sidebarCollapsed', String(!current)); return !current })}><PanelLeft size={18} /></button><div className="breadcrumb"><strong>{route.page === 'entity' ? knowledge.index.entities.find(entity => entity.id === route.id)?.title ?? 'Topics' : country?.name ?? sections.find(section => section.id === route.page)?.label ?? (route.page === 'countries' ? 'Countries' : 'Map')}</strong></div></div>
         <a href="#/world" className="mobile-brand"><Globe2 size={19} /> ORBIS</a>
         <div className="top-actions"><button className="search-trigger" onClick={() => setShowSearch(true)}><Search size={17} /><span>Search ORBIS</span><kbd>{isMac ? '⌘ K' : 'Ctrl K'}</kbd></button>
           <button className="icon-button theme-button" aria-label={dark ? 'Use light theme' : 'Use dark theme'} onClick={() => setTheme(dark ? 'light' : 'dark')}>{dark ? <Sun size={19} /> : <Moon size={18} />}</button>
@@ -315,7 +316,6 @@ export default function App() {
           viewMap={() => go('map', '', country.id)} pinned={pinned.includes(country.id)} toggle={() => toggle(country.id)} />
           : <Directory countries={data.countries} open={open} />)}
       </main>
-      <footer className="footer"><Globe2 size={15} /> ORBIS <span>·</span> <button className="text-button" onClick={() => setShowData(true)}>Data & sources</button></footer>
     </div>
     {showSearch && <SearchDialog index={knowledge.index} openEntity={openEntity} countries={data.countries} recent={recent} close={() => setShowSearch(false)} open={open} />}
     {showData && <Modal label="Data and sources" onClose={() => setShowData(false)}>

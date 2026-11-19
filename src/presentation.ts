@@ -70,15 +70,15 @@ export function makeResearchPrompt(countries: Country[], data: Dataset, subject:
     'Selected existing context (not a complete database):']
   for (const country of countries.slice(0, 5)) {
     lines.push(`\n${country.name} (${country.id}), ${country.continent}:`)
-    const ids = countryMetricIds(country).filter(id => categories.includes(data.metrics[id]?.category) && !/^r2_climate_(temp|precip)/.test(id))
-    const preferred = overviewMetrics(country).filter(item => categories.includes(data.metrics[item.id]?.category)).map(item => item.id)
+    const ids = countryMetricIds(country).filter(id => categories.includes(data.metrics[id]?.category) && (subject !== 'Employment rights' || /legal|leave|maternity|paternity/.test(id)) && (subject !== 'Taxes' || /oecd|tax/.test(id)) && !/^r2_climate_(temp|precip)/.test(id))
+    const preferred = overviewMetrics(country).filter(item => ids.includes(item.id)).map(item => item.id)
     let count = 0
     for (const id of [...new Set([...preferred, ...ids])]) {
       const item = country.values[id] ?? countryObservations(country, id)[0]
       if (!item) continue
       const metric = data.metrics[id]
-      lines.push(`- ${shortLabel(id, metric)}: ${item.value} ${item.unit ?? metric?.unit ?? ''}; reference: ${item.year ?? 'not recorded'}; currency: ${item.currency ?? 'not recorded'}; scope: ${item.sourceLocation ?? item.scope ?? item.basis ?? 'not recorded'}; status: ${id.match(/^(net|rent|essentials|left|rent_burden)$/) ? 'original unverified estimate' : item.estimated ? 'estimated' : item.verification ?? 'not independently verified'}${item.calculated ? ', calculated' : ''}. Definition: ${(item.definition ?? metric?.description ?? 'not recorded').slice(0, 260)}. Source: ${item.source ?? 'not recorded'}.`)
-      if (++count === 6) break
+      lines.push(`- ${shortLabel(id, metric)}: ${item.value} ${item.unit ?? metric?.unit ?? ''}; reference: ${item.year ?? 'not recorded'}; currency: ${item.currency ?? 'not recorded'}; scope: ${item.sourceLocation ?? item.scope ?? item.basis ?? 'not recorded'}; status: ${id.match(/^(net|rent|essentials|left|rent_burden)$/) ? 'original unverified estimate' : item.estimated ? 'estimated' : item.verification ?? 'not independently verified'}${item.calculated ? ', calculated' : ''}. Definition: ${(item.definition ?? metric?.description ?? 'not recorded').slice(0, 260)}. Method/caveat: ${(item.method ?? item.notes ?? data.metrics[id]?.aggregationNotes ?? 'not recorded').slice(0, 180)}. Source: ${item.source ?? 'not recorded'}.`)
+      if (++count === 5) break
     }
     if (!count) lines.push('No directly relevant statistical observations selected. Research is needed; do not infer missing facts.')
   }

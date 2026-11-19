@@ -53,7 +53,7 @@ export default function CountryProfile({ country, data, back, viewMap, pinned, t
         if (!ids.length) return null
         return <details className="subject-disclosure" key={title + String(allData)} open={allData || undefined}>
           <summary>{title}<span>{ids.length}</span></summary>
-          <div className="subject-content"><div className="subject-actions"><ResearchPrompt countries={[country]} data={data} subject={group.category} /></div>
+          <div className="subject-content"><div className="subject-actions"><ResearchPrompt countries={[country]} data={data} subject={title === 'Employment rights' ? title : title === 'Taxes & models' ? 'Taxes' : group.category} /></div>
             <div className="record-list">{ids.map(id => {
               const item = country.values[id]
               return <button className="record-row" key={id} onClick={() => setDetail(id)} aria-label={data.metrics[id].label}>
@@ -64,6 +64,7 @@ export default function CountryProfile({ country, data, back, viewMap, pinned, t
           </div>
         </details>
       })}</div>
+      {Object.keys(country.history ?? {}).length > 0 && <details className="subject-disclosure"><summary>Historical & local observations</summary><div className="subject-content record-list">{Object.entries(country.history ?? {}).map(([id, observations]) => <button className="record-row" key={id} onClick={() => setDetail(id)}><span>{shortLabel(id, data.metrics[id])}</span><strong>{observations.length} records</strong></button>)}</div></details>}
       <details className="subject-disclosure"><summary>Related subjects</summary><div className="subject-content"><RelatedEntities index={index} id={'country:' + country.id} openEntity={openEntity} /><ResearchPrompt countries={[country]} data={data} /></div></details>
       {(country.notes || country.research) && <details className="subject-disclosure"><summary>Research notes & original records</summary><div className="subject-content">
         {country.notes && <Markdown skipHtml disallowedElements={['img']} urlTransform={url => safeUrl(url) ?? ''}>{country.notes}</Markdown>}

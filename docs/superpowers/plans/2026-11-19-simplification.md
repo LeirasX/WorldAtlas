@@ -13,3 +13,5 @@ Architecture: a pure presentation selector chooses one explicitly defined series
 7. Run unit, browser and production checks. Commit/push each ready increment and verify Pages. No raw data or private research publication.
 
 Review focus: incompatible area definitions; median versus mean/net versus gross; dated legal benchmarks; local rent versus national data; missing months; clipboard permissions; mobile disclosure/focus; exhaustive records remain reachable.
+
+Completed: compact profile and climate/table disclosures, qualified defaults, complete record access, guarded comparison differences, metric additions/fullscreen, focused prompt preview/copy/fallback, compact map and region controls, collapsible navigation, Topics lists, and reduced-motion rules. Browser checks caught and verified fixes for bottom navigation obscuring Statistics and duplicate territory-derived country labels. All underlying CSVs and metric definitions stayed unchanged.

@@ -10,14 +10,14 @@ type Props = { data: Dataset; index: KnowledgeIndex; openEntity: (entity: Knowle
 export function TopicBrowser({ data, index, openEntity }: Props) {
   const [term, setTerm] = useState('')
   const topics = index.entities.filter(entity => ['topic', 'concept', 'article'].includes(entity.kind) && (entity.title + ' ' + entity.summary).toLowerCase().includes(term.toLowerCase()))
-  return <>
-    <div className="page-heading editorial-heading"><span className="eyebrow">Make the connections</span><h1>Understand the world.</h1><p>Start with an explanation. Follow the evidence into places, indicators and sources.</p></div>
+  return <section className="topic-browser">
+    <div className="page-heading compact-heading"><h1>Topics</h1></div>
     <label className="field topic-search"><Search size={17} /><input aria-label="Find a topic" value={term} placeholder="Find a topic" onChange={event => setTerm(event.target.value)} /></label>
-    <div className="topic-grid">{topics.map(entity => <button key={entity.id} className="topic-tile" onClick={() => openEntity(entity)}>
-      <BookOpen size={23} /><h2>{entity.title}</h2><p>{entity.summary}</p><span>{entity.metricIds?.length ? `${entity.metricIds.filter(id => data.metrics[id]).length} indicators` : 'Read the introduction'} <ArrowRight size={16} /></span>
-    </button>)}</div>
-    {!topics.length && <p className="empty">No topics match this search.</p>}
-  </>
+    {[['Subjects', topics.filter(entity => entity.kind === 'topic')], ['Introductions', topics.filter(entity => entity.kind !== 'topic')]].map(([title, entries]) => (entries as KnowledgeEntity[]).length > 0 && <section className="topic-list-group" key={String(title)}><h2>{String(title)}</h2><div className="topic-list">
+      {(entries as KnowledgeEntity[]).sort((a, b) => a.title.localeCompare(b.title)).map(entity => <button className="topic-list-item" key={entity.id} onClick={() => openEntity(entity)}><BookOpen size={17} /><span><strong>{entity.title}</strong><small>{entity.summary}</small></span><ArrowRight size={15} /></button>)}
+    </div></section>)}
+    {!topics.length && <p className="empty">No matching topics.</p>}
+  </section>
 }
 
 export function RelatedEntities({ index, id, openEntity }: { index: KnowledgeIndex; id: string; openEntity: (entity: KnowledgeEntity) => void }) {
