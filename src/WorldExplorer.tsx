@@ -15,7 +15,7 @@ export default function WorldExplorer({ data, index, open, openEntity, compare, 
   const layers = available.filter(([, metric]) => metric.kind === 'number' && metric.allowMap !== false)
   const metric = data.metrics[metricId]
   const country = data.countries.find(item => item.id === selection)
-  const topics = index.entities.filter(entity => entity.kind === 'topic' && ((lens.categories as readonly string[]).includes(entity.title) || entity.metricIds?.some(id => available.some(([key]) => key === id))))
+  const topics = index.entities.filter(entity => (entity.kind === 'topic' || (entity.kind === 'concept' && lensId === 'economy')) && ((entity.kind === 'concept') || (lens.categories as readonly string[]).includes(entity.title) || entity.metricIds?.some(id => available.some(([key]) => key === id))))
   const values = country ? [...new Set([...(metricId ? [metricId] : []), ...available.map(([id]) => id), 'population', 'area'])].filter(id => country.values[id]?.value !== null && country.values[id]?.value !== undefined).slice(0, 5) : []
   return <section className="world-explorer" aria-label="Explore the world">
     <div className="explorer-heading"><span className="eyebrow">ORBIS · {data.countries.length} countries</span><h1>Explore the world.</h1><p>Understand how it works.</p></div>

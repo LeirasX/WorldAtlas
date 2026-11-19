@@ -185,7 +185,7 @@ export function loadDataset(files: DataFile[], registry: Metrics, complete = fal
   return { countries: countries.sort((a, b) => a.name.localeCompare(b.name)), metrics, files: files.map(file => file.name) }
 }
 
-function typo(pattern: string, word: string) {
+export function typo(pattern: string, word: string) {
   if (Math.abs(pattern.length - word.length) > 1) return false
   const [shorter, longer] = pattern.length <= word.length ? [pattern, word] : [word, pattern]
   let position = 0

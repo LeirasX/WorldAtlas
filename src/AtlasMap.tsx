@@ -170,6 +170,11 @@ export default function AtlasMap({ countries, visible, metricId, metric, onSelec
           </g>
         })}
       </g>
+      {!decorative && <g className="geographic-labels" aria-hidden="true" pointerEvents="none" transform={globe ? undefined : `translate(${view.x} ${view.y}) scale(${view.zoom})`}>{shapes.filter(shape => ['CAN', 'USA', 'BRA', 'RUS', 'CHN', 'IND', 'AUS', 'ZAF', 'DZA'].includes(shape.id)).map(shape => {
+        if (globe && geoDistance([-rotation[0], -rotation[1]], shape.point) >= Math.PI / 2.3) return null
+        const point = globe ? projection(shape.point) : [shape.x, shape.y]
+        return point ? <text key={shape.id} x={point[0]} y={point[1]} textAnchor="middle" fontSize={9 / (globe ? 1 : Math.sqrt(view.zoom))}>{byId.get(shape.id)?.name ?? shape.name}</text> : null
+      })}</g>}
     </svg>
     {!decorative && <>
       <div className="projection-controls" aria-label="Map projection">

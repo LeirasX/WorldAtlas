@@ -28,16 +28,16 @@ jobs:
       - run: npm test
       - run: npm run tauri build -- --bundles ${{ matrix.bundles }}
       - if: runner.os == 'macOS'
-        run: ditto -c -k --keepParent src-tauri/target/release/bundle/macos/WorldAtlas.app WorldAtlas-macOS.zip
+        run: ditto -c -k --keepParent src-tauri/target/release/bundle/macos/ORBIS.app ORBIS-macOS.zip
       - if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: WorldAtlas-macOS
-          path: WorldAtlas-macOS.zip
+          name: ORBIS-macOS
+          path: ORBIS-macOS.zip
           if-no-files-found: error
       - if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: WorldAtlas-Windows
+          name: ORBIS-Windows
           path: src-tauri/target/release/bundle/nsis/*.exe
           if-no-files-found: error

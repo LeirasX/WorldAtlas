@@ -133,7 +133,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
     }, { escapeFormulae: true })
     const url = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }))
     const link = document.createElement('a')
-    link.href = url; link.download = 'worldatlas-explore.csv'; link.click()
+    link.href = url; link.download = 'orbis-explore.csv'; link.click()
     window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   function move(id: string, by: number) {

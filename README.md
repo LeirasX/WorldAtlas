@@ -1,4 +1,4 @@
-# WorldAtlas
+# ORBIS
 
 WorldAtlas is an offline country atlas for 195 countries. Use **World** to browse continents, **Explore** to filter and analyze rows, **Map** to color countries by metric, and **Countries** to open profiles and inspect sources. Press **⌘K** on macOS or **Ctrl+K** on Windows to search.
 
@@ -113,3 +113,15 @@ The shared React application now has Discover, Explore, Map, Topics and Countrie
 `src/knowledge.ts` derives entities and relationships from the currently loaded dataset. Validated version-1 JSON content packs can add sourced articles and relationships through Data & Sources, with browser-local persistence. They do not alter country identities or statistical observations. See [product architecture and roadmap](docs/PRODUCT_FOUNDATION.md) and [content-pack format](docs/CONTENT_IMPORT.md).
 
 Validation for this phase: 17 TypeScript tests, six Python importer tests, 14 private-data desktop/mobile browser checks and six public-build desktop/mobile checks passed. Private, GitHub Pages and native production builds passed. The macOS app is ad-hoc signed and not notarized. Vite reports large bundle warnings, especially for the complete local provenance dataset. Windows and iOS builds were not run on this host. No changes were published.
+
+## ORBIS
+
+WorldAtlas is now presented as **ORBIS — Explore the world. Understand how it works.** The repository path, GitHub remote, native application identifier and stored preferences remain compatible.
+
+The home screen is an interactive offline world map with eight thematic lenses and a contextual country panel. Explore, Topics and Compare are the three primary modes. The complete table, filters, statistics, full map and country directory remain accessible. Missing lens layers are described explicitly; the public edition uses only its approved dataset.
+
+Four original source-backed introductions cover inflation, purchasing power, interest rates and GDP per capita, with section citations, scope notes and editorial status. Their references were read on 2026-11-19: the ECB inflation explainer, the ECB interest-rate explainer dated 6 June 2024, and World Bank GDP-per-capita metadata. These short explanations are not copied source articles and are not marked independently reviewed. Topics and search share the same entity graph; indicator pages reuse the original observations.
+
+GitHub Pages deploys tested pushes to main. Each deployment has a unique artifact name and checks artifact availability before publishing. Private research, archives and device-local imports remain excluded. The website URL stays https://leirasx.github.io/WorldAtlas/.
+
+Remaining work includes broader reviewed articles (politics, law, healthcare, history and culture), validated city coordinates, dated events, occupation-specific research, and richer dimensional comparison interfaces. Existing comparison safeguards remain in place; no disposable-income estimates are fabricated. Windows and iOS builds require their toolchains and signing; the macOS build is ad-hoc signed, not notarized.

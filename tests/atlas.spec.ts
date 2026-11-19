@@ -37,7 +37,7 @@ test('filter, sort, compare, expand, and export the public table', async ({ page
   await page.getByRole('button', { name: 'Exit expanded table' }).click()
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export CSV' }).click()
-  expect((await download).suggestedFilename()).toBe('worldatlas-explore.csv')
+  expect((await download).suggestedFilename()).toBe('orbis-explore.csv')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy()
 })
 
@@ -72,4 +72,22 @@ test('ORBIS lenses retain the map and open contextual country evidence', async (
   await page.getByRole('button', { name: 'Open full profile' }).click()
   await expect(page.getByRole('heading', { name: 'Portugal', exact: true })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy()
+})
+
+
+test('source-backed introductions connect and indicator search reaches real observations', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: /Search ORBIS/ }).click()
+  await page.getByRole('combobox', { name: 'Search ORBIS' }).fill('inflaton')
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Inflation', exact: true })).toBeVisible()
+  await expect(page.locator('.structured-article')).toContainText('consumer price index')
+  await expect(page.locator('.content-status')).toContainText('review pending')
+  await expect(page.locator('.section-citations a').first()).toHaveAttribute('href', /ecb.europa.eu/)
+  await page.getByRole('button', { name: /Purchasing power/ }).click()
+  await expect(page.getByRole('heading', { name: 'Purchasing power', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: /Search ORBIS/ }).click()
+  await page.getByRole('combobox', { name: 'Search ORBIS' }).fill('Population')
+  await page.getByRole('option').filter({ hasText: 'indicator' }).first().click()
+  await expect(page.locator('.knowledge-evidence')).toContainText('countries with a primary observation')
 })

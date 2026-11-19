@@ -92,3 +92,13 @@ Publication and repository visibility are outside this local implementation phas
 Implemented the connected discovery slice, entity/content importer, country visualizations and flat/globe interaction within the existing React application. Verified with 17 TypeScript tests, six Python importer tests, 14 local-data and six public-build desktop/mobile browser checks. Public subpath/offline behavior passed. Private, Pages and macOS builds passed, with strict signature verification for the ad-hoc-signed app. Desktop and phone screenshots were inspected during implementation.
 
 The public dataset remains unchanged. No repository or deployment settings changed. Main-bundle size and the large complete local data chunk still trigger Vite warnings. Windows/iOS signing and builds remain platform work. Historical-event content, validated city coordinates, broader introductory articles and researched branding proposals remain future increments.
+
+## ORBIS increment, 2026-11-19
+
+The user selected ORBIS as the new product name. The home is now the interactive map, with eight lenses and an on-map contextual country panel. Three primary modes retain the previous data table, filters, statistics, comparisons, source details, country directory and full-map controls. Existing route URLs, native identifier and local storage remain compatible.
+
+The entity model now supports concepts, organizations, occupations, indicators, articles, laws, generic locations and sources. Structured sections cite named sources and carry editorial status; interpreted/causal links require evidence URLs. These are validation checks, not a truth-verification engine. Four short, original introductions use official ECB and World Bank explanations. Broader content remains a research/editorial gap.
+
+The observation adapter is a lossless view over primary/historical CSV data, not a destructive migration. Occupation and compensation dimensions are explicit optional fields, never guessed. Current country-primary selection semantics remain stable; automatic latest-compatible selection and richer dimension filters need further work.
+
+Verification: 21 unit/data/model tests, six Python importer tests, ten public and fourteen local desktop/mobile browser checks passed. Pages/private/native production builds passed. The macOS ORBIS app is ad-hoc signed, not notarized; Windows and iOS were not built here. Bundle-size warnings remain. Private research and original materials stay outside Git and the public build. Existing 195-country registry, all four local research releases and provenance remain preserved.

@@ -14,5 +14,5 @@ pub fn run() {
         ]);
     builder
         .run(tauri::generate_context!())
-        .expect("could not start WorldAtlas");
+        .expect("could not start ORBIS");
 }

@@ -27,7 +27,7 @@ fn config_file(app: &AppHandle) -> Result<PathBuf, String> {
     app.path()
         .app_config_dir()
         .map(|dir| dir.join("atlas-folder.txt"))
-        .map_err(|_| "Could not find WorldAtlas settings.".into())
+        .map_err(|_| "Could not find ORBIS settings.".into())
 }
 
 fn read_files(folder: &Path) -> Result<Vec<DataFile>, String> {
@@ -64,7 +64,7 @@ pub async fn read_atlas_folder(app: AppHandle) -> Result<Option<Vec<DataFile>>, 
         let path = match fs::read_to_string(config_file(&app)?) {
             Ok(value) => PathBuf::from(value),
             Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
-            Err(_) => return Err("Could not read WorldAtlas settings.".into()),
+            Err(_) => return Err("Could not read ORBIS settings.".into()),
         };
         read_files(&path).map(Some)
     })
@@ -80,7 +80,7 @@ pub async fn select_atlas_folder(
     tauri::async_runtime::spawn_blocking(move || {
         let Some(folder) = app.dialog().file()
             .set_parent(&window)
-            .set_title("Choose the WorldAtlas data folder")
+            .set_title("Choose the ORBIS data folder")
             .blocking_pick_folder() else {
             return Ok(None);
         };
@@ -93,7 +93,7 @@ pub async fn select_atlas_folder(
         let path_text = path.to_str().ok_or("The folder path must be valid UTF-8.")?;
         let config = config_file(&app)?;
         let parent = config.parent().ok_or("Could not find the settings folder.")?;
-        fs::create_dir_all(parent).map_err(|_| "Could not create WorldAtlas settings.")?;
+        fs::create_dir_all(parent).map_err(|_| "Could not create ORBIS settings.")?;
         fs::write(config, path_text).map_err(|_| "Could not remember the selected folder.")?;
         Ok(Some(files))
     })

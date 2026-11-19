@@ -39,3 +39,17 @@ Each imported entity requires an ID, kind, title, summary and at least one named
 Markdown raw HTML and images are disabled. Outbound source links open only when selected. Packs support narrative content and relationships. The six validated continent CSVs and metric registry continue to handle statistical observations and their provenance.
 
 The current interface resolves country IDs such as country:PRT, topic IDs such as topic:geography, and derived source-geography IDs. Imported relationships appear in **Keep exploring** and imported titles are included in global search. Inspect the TypeScript model in src/knowledge.ts when preparing larger content batches.
+
+## ORBIS structured content
+
+Entity kinds now include concept, organization, occupation, indicator, article, law, location and source in addition to the existing types. Populated indicators derive from the metric registry and reuse existing observations.
+
+An optional `status` is one of `draft`, `source-backed`, `reviewed`, `outdated`, `incomplete`. `reviewed` requires a supplied ISO `lastReviewed` date; it is an editorial assertion from the pack, not independent verification by the importer. Optional `aliases` and `caveats` are string arrays.
+
+Use `sections: [{ "heading": "Key ideas", "body": "Markdown explanation", "sourceUrls": ["https://example.org/reference"] }]`. Each section must cite at least one URL already named in that entity's sources. Rendering disables raw HTML and images. Source presence and schema validation cannot establish factual truth: an editor must check that references support the claims.
+
+Legal entities can supply `legal: { jurisdiction, subject, effectiveDate, population, status }`, where status is current, historical or unknown. Occupations can supply `occupation: { specializations: [], seniorityLevels: [] }`. The importer preserves these dimensions without inventing salary observations.
+
+Relationships may carry `evidence` (factual, interpretive, causal) and `sourceUrls`. Interpretive and causal relationships require supporting safe HTTP/HTTPS source URLs. They remain editorial assertions requiring review, never inferred causal truth.
+
+`src/observations.ts` provides a lossless record adapter over primary and historical CSV observations. It retains dates, currency and geographic scope. Occupation, seniority and compensation dimensions stay absent unless explicitly researched; the adapter never guesses them from a metric title. National statistics continue excluding local-only observations.
