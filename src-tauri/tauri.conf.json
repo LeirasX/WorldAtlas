@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "WorldAtlas",
+  "productName": "ORBIS",
   "version": "0.1.0",
   "identifier": "org.worldatlas.explorer",
   "build": {
@@ -10,7 +10,7 @@
     "frontendDist": "../dist-native"
   },
   "app": {
-    "windows": [{"label": "main", "title": "WorldAtlas", "width": 1260, "height": 850, "minWidth": 360, "minHeight": 520}],
+    "windows": [{"label": "main", "title": "ORBIS", "width": 1260, "height": 850, "minWidth": 360, "minHeight": 520}],
     "security": {
       "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'"
     }

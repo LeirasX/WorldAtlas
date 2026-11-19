@@ -451,3 +451,38 @@ thead th { position: sticky; top: 0; z-index: 2; background: var(--chrome); vert
 }
 
 .map-country.focused > path { stroke: var(--accent); stroke-width: 1.7 }
+
+/* ORBIS: the map is the shared exploration surface. */
+.world-explorer { max-width: 1800px; margin: auto; }
+.explorer-heading { margin: 0 0 22px; }
+.explorer-heading h1 { font-size: clamp(32px, 4vw, 48px); letter-spacing: -.05em; margin: 5px 0; }
+.explorer-heading p { margin: 0; color: var(--muted); font-size: 17px; }
+.lens-bar { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 15px; }
+.lens-bar button { white-space: nowrap; border: 1px solid var(--line); border-radius: 22px; padding: 9px 15px; color: var(--muted); background: var(--surface); font: inherit; cursor: pointer; }
+.lens-bar button[aria-pressed=true] { background: #1d3261; color: white; border-color: #1d3261; }
+.explorer-stage { position: relative; min-height: 580px; }
+.explorer-stage > .atlas-map { height: min(72vh, 900px); min-height: 580px; border-radius: 24px; }
+.explorer-stage > .atlas-map > svg { height: 100%; }
+.lens-inspector { position: absolute; top: 18px; left: 18px; width: 280px; padding: 18px; background: var(--surface); box-shadow: 0 8px 30px #0b1f3912; }
+.lens-inspector h2 { font-size: 18px; margin: 0; }
+.lens-inspector p { font-size: 12px; line-height: 1.6; }
+.lens-inspector .field { display: grid; gap: 7px; font-size: 12px; }
+.lens-inspector select { width: 100%; min-width: 0; }
+.lens-topics { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.country-context { position: absolute; right: 18px; top: 18px; width: 300px; max-height: calc(100% - 36px); overflow-y: auto; padding: 22px; background: var(--surface); box-shadow: 0 12px 40px #0b1f3924; }
+.context-close { float: right; }
+.country-context h2 { font-size: 25px; margin: 12px 0; }
+.country-context .details { font-size: 12px; }
+.country-context .details small { display: block; color: var(--muted); margin-top: 4px; }
+.country-context > button { margin: 8px 0; }
+.country-context details { font-size: 12px; line-height: 1.6; margin-top: 10px; }
+.explorer-shortcuts { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px 0; font-size: 13px; }
+.explorer-shortcuts a { display: inline-flex; align-items: center; gap: 8px; }
+@media (max-width: 800px) {
+  .sidebar nav { grid-template-columns: repeat(3, 1fr); }
+  .explorer-stage { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .explorer-stage > .atlas-map { min-height: 340px; height: 50vh; order: 1; }
+  .lens-inspector { position: static; width: auto; order: 2; padding: 16px; }
+  .country-context { position: static; width: auto; order: 0; max-height: none; }
+  .explorer-heading { margin-bottom: 15px; }
+}

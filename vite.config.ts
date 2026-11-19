@@ -57,7 +57,7 @@ export default defineConfig(({ mode }) => {
         for (const name of localAssets) hash.update(readFileSync(resolve('public', name)))
         this.emitFile({
           type: 'asset', fileName: 'manifest.webmanifest', source: JSON.stringify({
-            name: 'WorldAtlas', short_name: 'WorldAtlas', id: './', start_url: './', scope: './',
+            name: 'ORBIS', short_name: 'ORBIS', id: './', start_url: './', scope: './',
             display: 'standalone', background_color: '#f5f6fa', theme_color: '#1d3261',
             icons: [192, 512].map(size => ({
               src: `atlas-${size}.png`, sizes: `${size}x${size}`, type: 'image/png',

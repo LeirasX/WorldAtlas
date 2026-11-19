@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import {
-  ArrowDown, ArrowDownRight, ArrowLeft, ArrowRight, BookOpen, ChartNoAxesColumn,
-  ChevronRight, Compass, Database, FolderOpen, Globe2, Layers3, Map as MapIcon, Moon, Search,
-  Sun, Users, X, LibraryBig,
+  ArrowDown, ArrowLeft, ArrowRight, BookOpen,
+  ChevronRight, Database, FolderOpen, Globe2, Layers3, Map as MapIcon, Moon, Search,
+  Sun, X, LibraryBig,
 } from 'lucide-react'
 import Markdown from 'react-markdown'
 import registry from '../Data/metrics.json'
@@ -14,26 +14,23 @@ import { TopicBrowser, EntityPage, RelatedEntities } from './KnowledgeViews.tsx'
 import CountryVisuals from './CountryVisuals.tsx'
 import AtlasMap from './AtlasMap.tsx'
 import Explore from './Explore.tsx'
+import WorldExplorer from './WorldExplorer.tsx'
 
 const metrics = registry as Metrics
 const sections = [
-  { id: 'world', label: 'Discover', icon: Globe2 },
-  { id: 'explore', label: 'Explore', icon: Compass },
-  { id: 'map', label: 'Map', icon: MapIcon },
+  { id: 'world', label: 'Explore', icon: Globe2 },
   { id: 'topics', label: 'Topics', icon: LibraryBig },
-  { id: 'countries', label: 'Countries', icon: BookOpen },
+  { id: 'explore', label: 'Compare', icon: Layers3 },
 ] as const
-type Page = typeof sections[number]['id'] | 'entity'
+type Page = typeof sections[number]['id'] | 'entity' | 'map' | 'countries'
 type Route = { page: Page; id?: string }
 const regionOrder = ['Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania'] as const
-const regionClass: Record<string, string> = { Europe: 'eu', Asia: 'as', Africa: 'af', 'North America': 'na', 'South America': 'sa', Oceania: 'oc' }
-const regionGlyph: Record<string, string> = { Europe: 'EU', Asia: 'AS', Africa: 'AF', 'North America': 'NA', 'South America': 'SA', Oceania: 'OC' }
 
 function readRoute(): Route {
   const [page, id] = window.location.hash.slice(1).replace(/^\//, '').split('/')
   let decoded: string | undefined
   try { decoded = id && decodeURIComponent(id) } catch { decoded = undefined }
-  return { page: page === 'entity' ? 'entity' : sections.find(section => section.id === page)?.id ?? 'world', id: decoded }
+  return { page: ['entity', 'map', 'countries'].includes(page) ? page as Page : sections.find(section => section.id === page)?.id ?? 'world', id: decoded }
 }
 
 function readPreference(key: string) {
@@ -68,9 +65,9 @@ function SearchDialog({ countries, recent, close, open, index, openEntity }: {
     ...entities.map(entity => ({ id: entity.id, title: entity.title, subtitle: entity.kind, flag: '', action: () => openEntity(entity) })),
   ]
   useEffect(() => { document.getElementById(`country-option-${active}`)?.scrollIntoView({ block: 'nearest' }) }, [active])
-  return <Modal label="Search WorldAtlas" onClose={close} className="spotlight">
+  return <Modal label="Search ORBIS" onClose={close} className="spotlight">
     <div className="search-input"><Search size={20} /><input autoFocus placeholder="Countries, places, topics and sources" value={term}
-      aria-label="Search WorldAtlas" role="combobox" aria-expanded="true" aria-controls="country-results"
+      aria-label="Search ORBIS" role="combobox" aria-expanded="true" aria-controls="country-results"
       aria-activedescendant={results[active] ? `country-option-${active}` : undefined}
       onChange={event => { setActive(0); setTerm(event.target.value) }}
       onKeyDown={event => {
@@ -86,48 +83,6 @@ function SearchDialog({ countries, recent, close, open, index, openEntity }: {
       {!results.length && <p className="empty">No available knowledge matches “{term}”.</p>}
     </div>
   </Modal>
-}
-
-function World({ data, go, open, index, openEntity }: { data: Dataset; go: (page: Page, region?: string) => void; open: (country: Country) => void; index: KnowledgeIndex; openEntity: (entity: KnowledgeEntity) => void }) {
-  const sum = (id: string) => data.countries.reduce((result, country) => result + (Number(country.values[id]?.value) || 0), 0)
-  const facts = [
-    { icon: Globe2, value: String(data.countries.length), label: 'Countries' },
-    { icon: Users, value: format({ value: sum('population') }), label: 'Snapshot population' },
-    ...(sum('area') ? [{ icon: MapIcon, value: `${format({ value: sum('area') })} km²`, label: 'Total land area' }]
-      : [{ icon: ChartNoAxesColumn, value: String(availableMetrics(data).length), label: 'Available indicators' }]),
-    { icon: Layers3, value: String(new Set(data.countries.map(country => country.continent)).size), label: 'Continents' },
-  ]
-  const featured = ['PRT', 'JPN', 'BRA', 'NZL'].map(id => data.countries.find(country => country.id === id)).filter((country): country is Country => Boolean(country))
-  return <>
-    <section className="hero">
-      <AtlasMap countries={data.countries} decorative />
-      <div className="hero-content">
-        <span className="eyebrow">A world of connections</span><h1>Explore the world.</h1>
-        <p>Discover places. Follow an idea. Understand the evidence behind everyday life.</p>
-        <button className="hero-button" onClick={() => go('explore')}><Compass size={18} /> Explore countries <ArrowRight size={17} /></button>
-      </div>
-      <button className="hero-map-link" onClick={() => go('map')}>Open world map <ArrowDownRight size={16} /></button>
-    </section>
-    <section className="world-section discovery-topics">
-      <div className="section-title"><h2>Start with a question.</h2><button className="text-button" onClick={() => go('topics')}>All topics <ArrowRight size={16} /></button></div>
-      <div className="topic-grid">{['Housing', 'Economy', 'Climate'].flatMap(category => index.entities.find(entity => entity.id === stableId('topic', category)) ?? []).map(entity =>
-        <button className="topic-tile" key={entity.id} onClick={() => openEntity(entity)}><BookOpen size={21} /><h2>{entity.title}</h2><p>{entity.summary}</p><span>Explore the evidence <ArrowRight size={15} /></span></button>)}</div>
-    </section>
-    <div className="facts">
-      {facts.map(({ icon: Icon, value, label }) => <div key={label} className="fact"><div className="fact-icon"><Icon size={19} /></div><div><strong>{value}</strong><span>{label}</span></div></div>)}
-    </div>
-    <section className="world-section">
-      <div className="section-title"><div><h2>Continents</h2><p>Browse countries by region.</p></div><button className="text-button" onClick={() => go('explore')}>View all countries <ArrowRight size={16} /></button></div>
-      <div className="regions">{regionOrder.map(region => <button key={region} className="region-card" onClick={() => go('explore', region)}>
-        <span className={`region-glyph ${regionClass[region]}`} aria-hidden="true">{regionGlyph[region]}</span><span>
-          <strong>{region}</strong><small>{data.countries.filter(country => country.continent === region).length} countries</small></span><ChevronRight size={17} />
-      </button>)}</div>
-    </section>
-    <section className="world-section featured">
-      <div className="section-title"><h2>Country profiles</h2><button className="text-button" onClick={() => go('countries')}>Browse profiles <ArrowRight size={16} /></button></div>
-      <div className="country-grid">{featured.map(country => <CountryTile key={country.id} country={country} onClick={() => open(country)} />)}</div>
-    </section>
-  </>
 }
 
 function CountryTile({ country, onClick }: { country: Country; onClick: () => void }) {
@@ -373,7 +328,7 @@ export default function App() {
   const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
   return <div className="shell">
     <aside className="sidebar">
-      <a className="brand" href="#/world"><span className="brand-mark"><Globe2 size={23} /></span><span>WorldAtlas</span></a>
+      <a className="brand" href="#/world"><span className="brand-mark"><Globe2 size={23} /></span><span>ORBIS</span></a>
       <nav aria-label="Main navigation">{sections.map(({ id, label, icon: Icon }) => <a key={id} href={`#/${id}`} className={route.page === id ? 'nav-link current' : 'nav-link'} aria-current={route.page === id ? 'page' : undefined}>
         <Icon size={19} strokeWidth={1.9} /><span>{label}</span></a>)}</nav>
       <div className="sidebar-bottom"><button className="nav-link" onClick={() => setShowData(true)}><Database size={18} /> <span>Data & sources</span></button>
@@ -383,15 +338,15 @@ export default function App() {
     <div className="workspace">
       <header className="topbar">
         <div className="breadcrumb"><span>Atlas</span><ChevronRight size={14} /><strong>{route.page === 'entity' ? knowledge.index.entities.find(entity => entity.id === route.id)?.title ?? 'Knowledge' : sections.find(section => section.id === route.page)?.label}</strong></div>
-        <a href="#/world" className="mobile-brand"><Globe2 size={19} /> WorldAtlas</a>
-        <div className="top-actions"><button className="search-trigger" onClick={() => setShowSearch(true)}><Search size={17} /><span>Search WorldAtlas</span><kbd>{isMac ? '⌘ K' : 'Ctrl K'}</kbd></button>
+        <a href="#/world" className="mobile-brand"><Globe2 size={19} /> ORBIS</a>
+        <div className="top-actions"><button className="search-trigger" onClick={() => setShowSearch(true)}><Search size={17} /><span>Search ORBIS</span><kbd>{isMac ? '⌘ K' : 'Ctrl K'}</kbd></button>
           <button className="icon-button theme-button" aria-label={dark ? 'Use light theme' : 'Use dark theme'} onClick={() => setTheme(dark ? 'light' : 'dark')}>{dark ? <Sun size={19} /> : <Moon size={18} />}</button>
           <button className="icon-button mobile-data" aria-label="Data and sources" onClick={() => setShowData(true)}><Database size={18} /></button>
         </div>
       </header>
       <main className="main">
         {warning && <p role="alert" className="data-warning">{warning}</p>}
-        {route.page === 'world' && <World data={data} go={go} open={open} index={knowledge.index} openEntity={openEntity} />}
+        {route.page === 'world' && <WorldExplorer data={data} open={open} index={knowledge.index} openEntity={openEntity} compare={toggle} pinned={pinned} />}
         {route.page === 'topics' && <TopicBrowser data={data} index={knowledge.index} openEntity={openEntity} openCountry={open} />}
         {route.page === 'entity' && (knowledge.index.entities.find(entity => entity.id === route.id)
           ? <EntityPage key={route.id} data={data} index={knowledge.index} entity={knowledge.index.entities.find(entity => entity.id === route.id)!} openEntity={openEntity} openCountry={open} />
@@ -402,7 +357,7 @@ export default function App() {
           viewMap={() => go('map', '', country.id)} pinned={pinned.includes(country.id)} toggle={() => toggle(country.id)} />
           : <Directory countries={data.countries} open={open} />)}
       </main>
-      <footer className="footer"><Globe2 size={15} /> WorldAtlas <span>·</span> <button className="text-button" onClick={() => setShowData(true)}>Data & sources</button></footer>
+      <footer className="footer"><Globe2 size={15} /> ORBIS <span>·</span> <button className="text-button" onClick={() => setShowData(true)}>Data & sources</button></footer>
     </div>
     {showSearch && <SearchDialog index={knowledge.index} openEntity={openEntity} countries={data.countries} recent={recent} close={() => setShowSearch(false)} open={open} />}
     {showData && <Modal label="Data and sources" onClose={() => setShowData(false)}>
