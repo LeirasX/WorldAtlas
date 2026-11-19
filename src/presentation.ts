@@ -7,12 +7,14 @@ const definitions: Record<string, string> = {
   wb_life_expectancy_years: 'Life expectancy', wb_internet_users_pct: 'Internet use', wb_forest_area_pct: 'Forest cover',
   wb_urban_population_pct: 'Urban population', r3_oecd_average_wage_single_net_monthly_equivalent_lcu: 'Modeled take-home pay',
   r2_actual_annual_hours_per_worker_oecd: 'Annual working hours',
+  r3_legal_standard_workday_hours_2019: 'Legal workday · 2019 case',
+  r3_legal_max_workdays_week_2019: 'Maximum workweek · 2019 case',
   r3_legal_paid_annual_leave_1y_workdays_2019: 'Paid leave · 1 year tenure · 2019',
   r3_legal_paid_annual_leave_5y_workdays_2019: 'Paid leave · 5 years tenure · 2019',
   r3_paid_maternity_leave_calendar_days_2025: 'Maternity leave · 2025 case', r3_paid_paternity_leave_calendar_days_2025: 'Paternity leave · 2025 case',
 }
 export function shortLabel(id: string, metric?: Metric) {
-  return definitions[id] ?? (metric?.label ?? id).replace(/ · (WDI|ILOSTAT|OECD|Round 4|ILO median|2025 OECD scenario|historical May 2019).*$/, '').replace(/\s*\(variable currency\)/g, '').replace(' (people per sq. km of land area)', '').replace('Individuals using the Internet (% of population)', 'Internet use')
+  return definitions[id] ?? (metric?.label ?? id).replace(/ · (WDI|ILOSTAT|OECD|Round 4|ILO median|2025 OECD scenario).*$/, '').replace(/\s*\(variable currency\)/g, '').replace(' (people per sq. km of land area)', '').replace('Individuals using the Internet (% of population)', 'Internet use')
 }
 export function overviewMetrics(country: Country): SummaryMetric[] {
   const result: SummaryMetric[] = []

@@ -29,6 +29,7 @@ test('codes are not presented as languages or society explanations', () => {
   assert.equal(languageSummary('PT·VH'), 'Portuguese')
   assert.equal(languageSummary('EN/FR·VH'), 'English, French')
   assert.equal(languageSummary('PT-VH'), undefined)
+  assert.match(shortLabel('r3_legal_standard_workday_hours_2019', { label: 'Standard workday · historical May 2019', category: 'Work', kind: 'number' }), /2019/)
   assert.equal(shortLabel('wb_population_density_per_km2', { label: 'Long density label', category: 'Geography', kind: 'number' }), 'Density')
 })
 
