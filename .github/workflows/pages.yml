@@ -36,5 +36,19 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+          name: pages-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Wait for deployment artifact availability
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: pages-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          for attempt in $(seq 1 12); do
+            count=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq "[.artifacts[] | select(.name == \"$ARTIFACT_NAME\")] | length")
+            if [ "$count" = "1" ]; then exit 0; fi
+            sleep 5
+          done
+          exit 1
       - uses: actions/deploy-pages@v4
         id: deploy
+        with:
+          artifact_name: pages-${{ github.run_id }}-${{ github.run_attempt }}
