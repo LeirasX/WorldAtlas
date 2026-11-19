@@ -92,3 +92,9 @@ export function canCompare(a: Observation | undefined, b: Observation | undefine
   return ['currency', 'unit', 'definition', 'scope', 'basis', 'method', 'calculated', 'estimated'].every(field => a[field as keyof Observation] === b[field as keyof Observation])
     && (!/currency|USD|EUR|LCU|dollar|month/i.test(metric.unit ?? '') || Boolean(a.currency && b.currency && a.currency === b.currency))
 }
+
+export function defaultExploreMetrics(data: Dataset) {
+  const used = new Set(data.countries.flatMap(countryMetricIds))
+  return [['wb_population', 'population'], ['wb_land_area_km2', 'area'], ['wb_population_density_per_km2', 'density'], ['language'], ['climate']]
+    .flatMap(series => series.find(id => used.has(id)) ?? [])
+}

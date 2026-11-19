@@ -140,4 +140,6 @@ Each expanded subject offers **Copy AI prompt**. Preview the bounded selected co
 
 The public build continues using only approved public data. Climate and other research-rich summaries appear in the local edition wherever those observations exist; absence of public observations is not filled with private material or invented values.
 
-Simplification verification: 27 TypeScript/data/model tests, six Python importer tests, and 32 desktop/mobile browser scenarios passed (18 local research, 14 public). Pages, private web and macOS production builds passed. The macOS app passed strict signature verification; it remains ad-hoc signed and not notarized. Windows/iOS builds were not run. Vite's large-bundle warnings remain, especially for the complete local research payload.
+Simplification verification: 28 TypeScript/data/model tests, six Python importer tests, and 32 desktop/mobile browser scenarios passed (18 local research, 14 public). Pages, private web and macOS production builds passed. The macOS app passed strict signature verification; it remains ad-hoc signed and not notarized. Windows/iOS builds were not run. Vite's large-bundle warnings remain, especially for the complete local research payload.
+
+Table and Statistics defaults now use the same preferred geographic series as the country overview. Direct Population/Density lenses prioritize the same defined research series when available; the public snapshot remains the fallback. This changes presentation defaults only.

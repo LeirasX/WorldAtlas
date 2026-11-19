@@ -16,5 +16,5 @@ export const lenses = [
 export type Lens = typeof lenses[number]
 export function lensMetrics(data: Dataset, lens: Lens) {
   const used = new Set(data.countries.flatMap(countryMetricIds))
-  return Object.entries(data.metrics).filter(([id, metric]) => used.has(id) && ('metricIds' in lens ? (lens.metricIds as readonly string[]).includes(id) : (lens.categories as readonly string[]).includes(metric.category)))
+  return Object.entries(data.metrics).filter(([id, metric]) => used.has(id) && ('metricIds' in lens ? (lens.metricIds as readonly string[]).includes(id) : (lens.categories as readonly string[]).includes(metric.category))).sort(([a], [b]) => 'metricIds' in lens ? (lens.metricIds as readonly string[]).indexOf(a) - (lens.metricIds as readonly string[]).indexOf(b) : 0)
 }

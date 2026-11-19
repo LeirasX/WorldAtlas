@@ -79,3 +79,13 @@ test('tax and employment-rights prompts omit unrelated preferred summary metrics
   assert.match(legal, /2019-05/)
   assert.doesNotMatch(legal, /Weekly hours/)
 })
+
+test('table defaults follow the same defined geographic series as profile summaries', async () => {
+  const { defaultExploreMetrics } = await import('../src/presentation.ts')
+  const fields = defaultExploreMetrics(data)
+  assert.ok(fields.includes('wb_population'))
+  assert.ok(fields.includes('wb_land_area_km2'))
+  assert.ok(!fields.includes('population') && !fields.includes('area'))
+  const publicOnly = { ...data, countries: [{ ...country, values: { population: { value: 10 } } }] }
+  assert.deepEqual(defaultExploreMetrics(publicOnly), ['population'])
+})

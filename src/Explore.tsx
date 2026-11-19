@@ -2,11 +2,10 @@ import { useMemo, useState } from 'react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Download, Filter, Layers3, Maximize2, Minimize2, Search, SlidersHorizontal, X } from 'lucide-react'
 import Papa from 'papaparse'
 import ResearchPrompt from './ResearchPrompt.tsx'
-import { overviewMetrics, shortLabel, canCompare } from './presentation.ts'
+import { overviewMetrics, shortLabel, canCompare, defaultExploreMetrics } from './presentation.ts'
 import { availableMetrics, Modal, ObservationDetail, RegionPicker } from './App.tsx'
 import { countryObservations, format, parseNumber, query, search, statistics, type Country, type Dataset } from './data.ts'
 
-const columns = ['population', 'area', 'density', 'language', 'climate']
 const labels: Record<string, string> = { population: 'Pop.', density: '/km²', net: 'Net €', rent: 'Rent €', left: 'Left €', language: 'Lang.' }
 
 type Props = {
@@ -92,7 +91,7 @@ function FilterBuilder({ data, set }: { data: Dataset; set: (clause: string) => 
 export default function Explore({ data, open, region, setRegion, filter, setFilter, pinned, toggle }: Props) {
   const [detail, setDetail] = useState<{ country: Country; id: string }>()
   const [term, setTerm] = useState('')
-  const [fields, setFields] = useState<string[]>(columns)
+  const [fields, setFields] = useState<string[]>(() => defaultExploreMetrics(data))
   const [sort, setSort] = useState('country')
   const [descending, setDescending] = useState(false)
   const [tools, setTools] = useState<'filters' | 'columns' | 'views'>()
@@ -106,7 +105,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
   const available = useMemo(() => availableMetrics(data), [data])
   const shown = fields.filter(id => available.some(([key]) => key === id))
   const numeric = available.filter(([, metric]) => metric.kind === 'number' && metric.allowStatistics !== false)
-  const indicator = numeric.some(([id]) => id === statsMetric) ? statsMetric : numeric[0]?.[0]
+  const indicator = numeric.some(([id]) => id === statsMetric) ? statsMetric : numeric.find(([id]) => id === defaultExploreMetrics(data)[0])?.[0] ?? numeric[0]?.[0]
   const { rows, error } = useMemo(() => {
     let predicate: (country: Country) => boolean
     try { predicate = query(filter, data.metrics) } catch (error) { return { rows: [], error: String(error).replace(/^Error: /, '') } }
