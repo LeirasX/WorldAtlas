@@ -11,14 +11,14 @@ import { countryMetricIds, countryObservations, continents, format, query, safeU
 import { bundledData, currentData, desktop, desktopFolder, forgetDesktopFolder, importData, resetData } from './platform.ts'
 import { buildKnowledge, importKnowledge, searchKnowledge, stableId, type KnowledgeEntity, type KnowledgeIndex } from './knowledge.ts'
 import { TopicBrowser, EntityPage, RelatedEntities } from './KnowledgeViews.tsx'
-import CountryVisuals from './CountryVisuals.tsx'
+import Profile from './CountryProfile.tsx'
 import AtlasMap from './AtlasMap.tsx'
 import Explore from './Explore.tsx'
 import WorldExplorer from './WorldExplorer.tsx'
 
 const metrics = registry as Metrics
 const sections = [
-  { id: 'world', label: 'Explore', icon: Globe2 },
+  { id: 'world', label: 'World', icon: Globe2 },
   { id: 'topics', label: 'Topics', icon: LibraryBig },
   { id: 'explore', label: 'Compare', icon: Layers3 },
 ] as const
@@ -131,48 +131,6 @@ export function ObservationDetail({ country, id, metric }: { country: Country; i
         <ObservationRecord item={item} metric={metric} />
       </details>)}
     </section>}
-  </>
-}
-
-function Profile({ country, data, back, viewMap, pinned, toggle, index, openEntity }: {
-  index: KnowledgeIndex; openEntity: (entity: KnowledgeEntity) => void; country: Country; data: Dataset; back: () => void; viewMap: () => void; pinned: boolean; toggle: () => void
-}) {
-  const [detail, setDetail] = useState<string>()
-  const groups = new Map<string, string[]>()
-  for (const id of countryMetricIds(country)) {
-    const category = data.metrics[id].category
-    groups.set(category, [...(groups.get(category) ?? []), id])
-  }
-  return <>
-    <button className="text-button back" onClick={back}><ArrowLeft size={17} /> All countries</button>
-    <section className="profile-banner">
-      <span className="profile-flag">{country.flag}</span><div><p>{country.continent} · {country.id}</p><h1>{country.name}</h1>
-        {country.values.language && <p>{country.values.language.value}</p>}</div>
-      <div className="profile-actions"><button className="button" onClick={viewMap}><MapIcon size={16} /> View on map</button>
-        <button className={pinned ? 'button selected' : 'button'} aria-pressed={pinned} onClick={toggle}><Layers3 size={16} /> {pinned ? 'Added to comparison' : 'Add to comparison'}</button></div>
-    </section>
-    <CountryVisuals country={country} data={data} />
-    <RelatedEntities index={index} id={'country:' + country.id} openEntity={openEntity} />
-    {[...groups].map(([category, ids]) => <section className="profile-section" key={category}><h2>{category}</h2>
-      <div className="metric-grid">{ids.map(id => <button className="metric-card" key={id} onClick={() => setDetail(id)}>
-        <span>{data.metrics[id].label}</span><strong>{country.values[id] ? format(country.values[id], data.metrics[id]) : `${countryObservations(country, id).length} local observations`}</strong>
-        <small>{data.metrics[id].unit ?? (country.values[id]?.estimated ? 'Estimate' : '')}</small>
-      </button>)}</div>
-    </section>)}
-    {country.notes && <section className="panel research notes"><h2>Research notes</h2>
-      <Markdown skipHtml disallowedElements={['img']} urlTransform={url => safeUrl(url) ?? ''}
-        components={{ a: ({ node: _node, ...props }) => <a {...props} target="_blank" rel="noreferrer" /> }}>
-        {country.notes}
-      </Markdown>
-    </section>}
-    {country.research && <details className="panel research"><summary>Source record</summary><dl className="details">
-      {Object.entries(country.research).filter(([, value]) => value).map(([field, value]) => <div key={field}>
-        <dt>{field}</dt><dd>{safeUrl(value) ? <a href={safeUrl(value)} target="_blank" rel="noreferrer">{value}</a> : value}</dd></div>)}
-    </dl></details>}
-    {detail && countryObservations(country, detail).length > 0 && <Modal label={data.metrics[detail].label} onClose={() => setDetail(undefined)}>
-      <div className="dialog-heading"><h2>{data.metrics[detail].label}</h2><button className="icon-button" aria-label="Close metric details" onClick={() => setDetail(undefined)}><X size={19} /></button></div>
-      <ObservationDetail country={country} id={detail} metric={data.metrics[detail]} />
-    </Modal>}
   </>
 }
 

@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Download, Filter, Layers3, Maximize2, Minimize2, Search, SlidersHorizontal, X } from 'lucide-react'
 import Papa from 'papaparse'
+import ResearchPrompt from './ResearchPrompt.tsx'
+import { overviewMetrics, shortLabel, canCompare } from './presentation.ts'
 import { availableMetrics, Modal, ObservationDetail, RegionPicker } from './App.tsx'
 import { countryObservations, format, parseNumber, query, search, statistics, type Country, type Dataset } from './data.ts'
 
-const columns = ['area', 'population', 'density', 'net', 'rent', 'left', 'language', 'climate', 'society', 'income_group']
+const columns = ['population', 'area', 'density', 'language', 'climate']
 const labels: Record<string, string> = { population: 'Pop.', density: '/km²', net: 'Net €', rent: 'Rent €', left: 'Left €', language: 'Lang.' }
 
 type Props = {
@@ -22,25 +24,35 @@ function savedViews(): SavedView[] {
 
 function Comparison({ data, countries, close, open }: { data: Dataset; countries: Country[]; close: () => void; open: (country: Country) => void }) {
   const [detail, setDetail] = useState<{ country: Country; id: string }>()
-  const keys = availableMetrics(data).filter(([id]) => countries.some(country => countryObservations(country, id).length))
-  return <Modal label="Country comparison" onClose={close} className="comparison-dialog">
-    <div className="dialog-heading"><div><h2>Country comparison</h2><p>Differences are relative to {countries[0]?.name}.</p></div>
+  const [allRecords, setAllRecords] = useState(false)
+  const [extras, setExtras] = useState<string[]>([])
+  const [expanded, setExpanded] = useState(false)
+  const all = availableMetrics(data).filter(([id]) => countries.some(country => countryObservations(country, id).length))
+  const selected = new Map<string, string>()
+  for (const country of countries) for (const item of overviewMetrics(country)) {
+    if (!selected.has(item.concept) || item.id.startsWith('wb_')) selected.set(item.concept, item.id)
+  }
+  const compact = new Set([...selected.values(), 'climate', ...extras])
+  const keys = all.filter(([id]) => allRecords || compact.has(id))
+  return <Modal label="Country comparison" onClose={close} className={expanded ? "comparison-dialog comparison-expanded" : "comparison-dialog"}>
+    <div className="dialog-heading"><div><h2>Compare countries</h2><p>Differences appear only for compatible records.</p></div>
       <button className="icon-button" onClick={close} aria-label="Close comparison"><X size={20} /></button></div>
+    {!detail && <div className="comparison-tools"><button className="button" aria-pressed={allRecords} onClick={() => setAllRecords(!allRecords)}>{allRecords ? 'Quick comparison' : 'All records'}</button><select aria-label="Add comparison metric" value="" onChange={event => { if (event.target.value) setExtras(previous => [...new Set([...previous, event.target.value])]) }}><option value="">Add a metric…</option>{all.filter(([id]) => !compact.has(id)).map(([id, metric]) => <option key={id} value={id}>{metric.label}</option>)}</select><button className="icon-button" aria-label={expanded ? 'Exit fullscreen comparison' : 'Fullscreen comparison'} onClick={() => setExpanded(!expanded)}>{expanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}</button><ResearchPrompt countries={countries} data={data} /></div>}
     {detail ? <div className="comparison-detail">
       <button className="text-button" onClick={() => setDetail(undefined)}>← Back to comparison</button>
       <h3>{detail.country.name} · {data.metrics[detail.id].label}</h3>
       <ObservationDetail country={detail.country} id={detail.id} metric={data.metrics[detail.id]} />
     </div> : <div className="table-scroll comparison-scroll"><table className="compare-table">
       <thead><tr><th>Metric</th>{countries.map(country => <th key={country.id}><button className="text-button" onClick={() => { close(); open(country) }}>{country.flag} {country.name}</button></th>)}</tr></thead>
-      <tbody>{keys.map(([id, metric]) => <tr key={id}><th scope="row">{metric.label}{metric.unit && <small>{metric.unit}</small>}</th>
+      <tbody>{keys.map(([id, metric]) => <tr key={id}><th scope="row" title={metric.label}>{allRecords ? metric.label : shortLabel(id, metric)}{metric.unit && <small>{metric.unit}</small>}</th>
         {countries.map((country, index) => {
           const value = country.values[id]
           const base = countries[0]?.values[id]?.value
-          const delta = metric.allowDifferences !== false && index && typeof base === 'number' && typeof value?.value === 'number' ? value.value - base : undefined
+          const delta = index && canCompare(countries[0]?.values[id], value, metric) && typeof base === 'number' && typeof value?.value === 'number' ? value.value - base : undefined
           const percent = metric.percentageDifference !== false && delta !== undefined && typeof base === 'number' && base > 0 ? 100 * delta / base : undefined
           const sign = delta !== undefined && delta > 0 ? '+' : ''
           return <td key={country.id}>{value ? <button className="compare-value" onClick={() => setDetail({ country, id })}>{format(value, metric)}
-            {value.confidence && <small>{value.confidence} confidence</small>}</button> : countryObservations(country, id).length > 0
+            <small>{[value.currency, value.year, value.estimated ? 'estimate' : ''].filter(Boolean).join(' · ')}</small></button> : countryObservations(country, id).length > 0
               ? <button className="compare-value" onClick={() => setDetail({ country, id })}>{countryObservations(country, id).length} local observations</button> : '—'}
             {delta !== undefined && <small className="delta">{sign}{format({ value: delta }, metric)}{percent !== undefined && ` · ${sign}${percent.toFixed(1)}%`}</small>}
           </td>
@@ -154,7 +166,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
   }
   const table = <div className="table-scroll"><table className="country-table">
     <thead><tr><th className="select-col"><span className="sr-only">Compare selection</span></th>{sortHeader('country', 'Country')}
-      {shown.map(id => sortHeader(id, labels[id] ?? data.metrics[id].label, data.metrics[id].kind === 'number'))}</tr></thead>
+      {shown.map(id => sortHeader(id, labels[id] ?? shortLabel(id, data.metrics[id]), data.metrics[id].kind === 'number'))}</tr></thead>
     <tbody>{rows.map(country => <tr key={country.id}>
       <td className="select-col"><input type="checkbox" aria-label={`Compare ${country.name}`} checked={pinned.includes(country.id)} disabled={pinned.length >= 5 && !pinned.includes(country.id)} onChange={() => toggle(country.id)} /></td>
       <th scope="row"><button className="country-cell" onClick={() => { setFullscreen(false); open(country) }}><span>{country.flag}</span> {country.name}</button></th>
@@ -166,7 +178,7 @@ export default function Explore({ data, open, region, setRegion, filter, setFilt
     </tr>)}</tbody>
   </table>{!rows.length && <p className="empty">{error ? 'Fix the filter to display countries.' : 'No countries match these filters.'}</p>}</div>
 
-  return <><div className="page-heading"><h1>Explore</h1><p>Filter, analyze, and compare countries.</p></div>
+  return <><div className="page-heading compact-heading"><h1>Compare</h1></div>
     <section className="panel explore-panel">
       <div className="toolbar explore-toolbar">
         <label className="field with-icon"><Search size={17} /><input aria-label="Filter countries by name" placeholder="Find a country" value={term} onChange={event => setTerm(event.target.value)} /></label>
